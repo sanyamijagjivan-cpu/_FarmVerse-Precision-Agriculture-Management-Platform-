@@ -1,12 +1,13 @@
 package com.farmverse.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.farmverse.entity.User;
+import com.farmverse.dto.UserRequest;
+import com.farmverse.response.ApiResponse;
 import com.farmverse.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 public class UserController {
@@ -15,7 +16,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+    public ApiResponse registerUser(@Valid @RequestBody UserRequest userRequest) {
+        return userService.registerUser(userRequest);
     }
 }
