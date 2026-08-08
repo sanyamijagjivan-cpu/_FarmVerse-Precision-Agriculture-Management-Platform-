@@ -198,60 +198,191 @@ const Landing = () => {
           </div>
         </section>
 
+        {/* =========================================
+            SMART FARMING FEATURES
+            ========================================= */}
+
         <section className="features" id="features">
           <div className="section-title">
-            <span>OUR FEATURES</span>
-            <h2>Smart Farming Solutions</h2>
-            <p>Advanced AI technology to empower modern agriculture.</p>
+            <span>SMART AGRICULTURE</span>
+            <h2>Intelligent Farming Solutions</h2>
+            <p>
+              Powerful AI-driven tools designed to help farmers make smarter,
+              faster, and more profitable decisions.
+            </p>
           </div>
 
           <div className="feature-grid">
-            <div className="feature-card">
-              <div className="feature-icon">
-                <FaRobot />
+
+            {/* AI Crop Prediction */}
+            <div
+              className="feature-card crop-feature"
+              onClick={() => navigate("/ai-farming-assistant")}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  navigate("/ai-farming-assistant");
+                }
+              }}
+            >
+              <div className="feature-top">
+                <div className="feature-icon">
+                  <FaRobot />
+                </div>
+
+                <span className="feature-number">01</span>
               </div>
-              <div>
-                <h3>AI Crop Prediction</h3>
+
+              <div className="feature-content">
+                <span className="feature-label">
+                  AI FARM INTELLIGENCE
+                </span>
+
+                <h3>Crop &amp; Farm Decision Support</h3>
+
                 <p>
-                  Get accurate crop recommendations using AI and climate
-                  analysis.
+                  Get intelligent crop recommendations using soil, weather,
+                  location, and farm conditions to make better farming
+                  decisions.
                 </p>
+              </div>
+
+              <div className="feature-footer">
+                <span>Explore decision support</span>
+
+                <div className="feature-arrow">
+                  <FaArrowRight />
+                </div>
               </div>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon">
-                <FaLeaf />
+            {/* Disease Detection */}
+            <div
+              className="feature-card disease-feature"
+              onClick={() => navigate("/disease-detection")}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  navigate("/disease-detection");
+                }
+              }}
+            >
+              <div className="feature-top">
+                <div className="feature-icon">
+                  <FaLeaf />
+                </div>
+
+                <span className="feature-number">02</span>
               </div>
-              <div>
+
+              <div className="feature-content">
+                <span className="feature-label">
+                  CROP HEALTH
+                </span>
+
                 <h3>Disease Detection</h3>
+
                 <p>
-                  Detect crop diseases early using intelligent image analysis.
+                  Detect potential crop diseases early with intelligent image
+                  analysis and protect your harvest before damage spreads.
                 </p>
+              </div>
+
+              <div className="feature-footer">
+                <span>Check crop health</span>
+
+                <div className="feature-arrow">
+                  <FaArrowRight />
+                </div>
               </div>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon">
-                <FaCloudSun />
+            {/* Weather Forecast */}
+            <div
+              className="feature-card weather-feature"
+              onClick={() => navigate("/weather")}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  navigate("/weather");
+                }
+              }}
+            >
+              <div className="feature-top">
+                <div className="feature-icon">
+                  <FaCloudSun />
+                </div>
+
+                <span className="feature-number">03</span>
               </div>
-              <div>
+
+              <div className="feature-content">
+                <span className="feature-label">
+                  LIVE WEATHER
+                </span>
+
                 <h3>Weather Forecast</h3>
+
                 <p>
-                  Real-time weather updates and forecasts for better planning.
+                  Monitor weather conditions and forecasts to plan irrigation,
+                  sowing, harvesting, and other farming activities.
                 </p>
+              </div>
+
+              <div className="feature-footer">
+                <span>View forecast</span>
+
+                <div className="feature-arrow">
+                  <FaArrowRight />
+                </div>
               </div>
             </div>
 
-            <div className="feature-card">
-              <div className="feature-icon">
-                <FaChartLine />
+            {/* Market Analysis */}
+            <div
+              className="feature-card market-feature"
+              onClick={() => navigate("/market-analysis")}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  navigate("/market-analysis");
+                }
+              }}
+            >
+              <div className="feature-top">
+                <div className="feature-icon">
+                  <FaChartLine />
+                </div>
+
+                <span className="feature-number">04</span>
               </div>
-              <div>
+
+              <div className="feature-content">
+                <span className="feature-label">
+                  MARKET INTELLIGENCE
+                </span>
+
                 <h3>Market Analysis</h3>
-                <p>Track market prices and trends to maximize your profits.</p>
+
+                <p>
+                  Track crop prices, market trends, and demand to identify
+                  better selling opportunities and maximize your returns.
+                </p>
+              </div>
+
+              <div className="feature-footer">
+                <span>Analyze market</span>
+
+                <div className="feature-arrow">
+                  <FaArrowRight />
+                </div>
               </div>
             </div>
+
           </div>
         </section>
 
@@ -298,7 +429,9 @@ const Landing = () => {
           <div className="section-title">
             <span>WHY FARMVERSE</span>
             <h2>Built for Smarter Decisions</h2>
-            <p>Powerful tools that make farming easier and more profitable.</p>
+            <p>
+              Powerful tools that make farming easier and more profitable.
+            </p>
           </div>
 
           <div className="why-grid">
@@ -337,7 +470,9 @@ const Landing = () => {
           <div className="section-title">
             <span>OUR TECHNOLOGY</span>
             <h2>Technology Behind FarmVerse</h2>
-            <p>Modern technologies powering smart farming solutions.</p>
+            <p>
+              Modern technologies powering smart farming solutions.
+            </p>
           </div>
 
           <div className="tech-grid">
@@ -376,7 +511,9 @@ const Landing = () => {
           <div className="section-title">
             <span>AI ASSISTANT</span>
             <h2>FarmVerse AI Assistant</h2>
-            <p>Get smart farming recommendations in a simple conversation.</p>
+            <p>
+              Get smart farming recommendations in a simple conversation.
+            </p>
           </div>
 
           <div className="chat-box">
@@ -384,6 +521,7 @@ const Landing = () => {
               <div className="chat-message user-message">
                 Which crop is best for my farm?
               </div>
+
               <div className="chat-icon user-icon">
                 <FaUser />
               </div>
@@ -393,6 +531,7 @@ const Landing = () => {
               <div className="chat-icon ai-icon">
                 <FaRobot />
               </div>
+
               <div className="chat-message ai-message">
                 <h4>FarmVerse AI</h4>
                 <p>
@@ -406,6 +545,7 @@ const Landing = () => {
               <div className="chat-message user-message">
                 Should I irrigate today?
               </div>
+
               <div className="chat-icon user-icon">
                 <FaUser />
               </div>
@@ -415,6 +555,7 @@ const Landing = () => {
               <div className="chat-icon ai-icon">
                 <FaRobot />
               </div>
+
               <div className="chat-message ai-message">
                 <h4>FarmVerse AI</h4>
                 <p>
@@ -455,9 +596,13 @@ const Landing = () => {
             ].map(([name, state, quote]) => (
               <div className="testimonial-card" key={name}>
                 <FaUserCircle className="testimonial-icon" />
+
                 <h3>{name}</h3>
+
                 <span>{state}</span>
+
                 <p>{quote}</p>
+
                 <div className="stars">
                   <FaStar />
                   <FaStar />
@@ -472,10 +617,12 @@ const Landing = () => {
 
         <section className="cta">
           <h2>Ready to Transform Your Farm?</h2>
+
           <p>
             Join FarmVerse and make smarter decisions with AI-powered
             agriculture.
           </p>
+
           <button onClick={() => navigate("/signup")}>
             Create Free Account <FaArrowRight />
           </button>
