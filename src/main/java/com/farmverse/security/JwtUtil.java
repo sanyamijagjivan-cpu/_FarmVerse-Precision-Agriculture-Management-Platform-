@@ -1,6 +1,8 @@
 package com.farmverse.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,68 +22,49 @@ public class JwtUtil {
 
     private final long EXPIRATION = 86400000;
 
-    public String generateToken(String email){
+    public String generateToken(String email) {
 
         return Jwts.builder()
-
-                .setSubject(email)
-
-                .setIssuedAt(new Date())
-
-                .setExpiration(
-                        new Date(System.currentTimeMillis()+EXPIRATION)
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(
+                        new Date(System.currentTimeMillis() + EXPIRATION)
                 )
-
                 .signWith(key, SignatureAlgorithm.HS256)
-
                 .compact();
-
     }
 
-    public String extractUsername(String token){
+    public String extractUsername(String token) {
 
-        return Jwts.parserBuilder()
-
-                .setSigningKey(key)
-
+        Claims claims = Jwts.parser()
+                .verifyWith((javax.crypto.SecretKey) key)
                 .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
-                .parseClaimsJws(token)
-
-                .getBody()
-
-                .getSubject();
-
+        return claims.getSubject();
     }
 
     public boolean isTokenValid(
             String token,
-            UserDetails userDetails){
+            UserDetails userDetails) {
 
         String username = extractUsername(token);
 
         return username.equals(userDetails.getUsername())
                 && !isTokenExpired(token);
-
     }
 
-    private boolean isTokenExpired(String token){
+    private boolean isTokenExpired(String token) {
 
-        Date expiration =
-                Jwts.parserBuilder()
+        Claims claims = Jwts.parser()
+                .verifyWith((javax.crypto.SecretKey) key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
-                        .setSigningKey(key)
-
-                        .build()
-
-                        .parseClaimsJws(token)
-
-                        .getBody()
-
-                        .getExpiration();
+        Date expiration = claims.getExpiration();
 
         return expiration.before(new Date());
-
     }
-
 }

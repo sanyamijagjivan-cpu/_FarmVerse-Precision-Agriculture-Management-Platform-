@@ -1,6 +1,6 @@
 package com.farmverse.exception;
 
-import java.time.localDateTime;
+import java.time.LocalDateTime;
 
 public class ErrorResponse{
   private LocalDateTime timestamp;
