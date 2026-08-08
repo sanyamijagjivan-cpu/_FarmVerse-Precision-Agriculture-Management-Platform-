@@ -200,7 +200,7 @@ const Landing = () => {
 
         <section className="features" id="features">
           <div className="section-title">
-            <span>OUR FEATURES</span>
+            <span className="heading">OUR FEATURES</span>
             <h2>Smart Farming Solutions</h2>
             <p>Advanced AI technology to empower modern agriculture.</p>
           </div>
@@ -257,7 +257,7 @@ const Landing = () => {
 
         <section className="how-it-works">
           <div className="section-title">
-            <span>HOW IT WORKS</span>
+            <span className="heading">HOW IT WORKS</span>
             <h2>Start Smart Farming in Four Steps</h2>
             <p>A simple process designed for every farmer.</p>
           </div>
@@ -296,7 +296,7 @@ const Landing = () => {
 
         <section className="why-choose" id="about">
           <div className="section-title">
-            <span>WHY FARMVERSE</span>
+            <span className="heading">WHY FARMVERSE</span>
             <h2>Built for Smarter Decisions</h2>
             <p>Powerful tools that make farming easier and more profitable.</p>
           </div>
@@ -335,7 +335,7 @@ const Landing = () => {
 
         <section className="technology" id="technology">
           <div className="section-title">
-            <span>OUR TECHNOLOGY</span>
+            <span className="heading">OUR TECHNOLOGY</span>
             <h2>Technology Behind FarmVerse</h2>
             <p>Modern technologies powering smart farming solutions.</p>
           </div>
@@ -374,7 +374,7 @@ const Landing = () => {
 
         <section className="ai-assistant">
           <div className="section-title">
-            <span>AI ASSISTANT</span>
+            <span className="heading">AI ASSISTANT</span>
             <h2>FarmVerse AI Assistant</h2>
             <p>Get smart farming recommendations in a simple conversation.</p>
           </div>
@@ -428,7 +428,7 @@ const Landing = () => {
 
         <section className="testimonials">
           <div className="section-title">
-            <span>TESTIMONIALS</span>
+            <span className="heading">TESTIMONIALS</span>
             <h2>What Farmers Say</h2>
             <p>
               Trusted by farmers across India for smarter farming decisions.

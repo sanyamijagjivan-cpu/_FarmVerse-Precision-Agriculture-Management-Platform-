@@ -115,6 +115,13 @@ nav button {
   font-weight: 600;
   box-shadow: 0 10px 24px rgba(22, 163, 74, 0.22);
 }
+.heading {
+  color: var(--green-700);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
 
 /* HERO */
 .hero {
@@ -410,13 +417,11 @@ nav button {
   color: var(--muted);
   font-size: 11px;
 }
-
-/* COMMON SECTION */
 /* ================= FEATURES ================= */
 
 .features {
   width: 100%;
-  padding: 100px 70px;
+  padding: 70px 8%;
   background: #f8fcf9;
 }
 
@@ -424,16 +429,18 @@ nav button {
   max-width: 750px;
   margin: 0 auto 60px;
   text-align: center;
+  margin-bottom: 45px;
 }
 
 .section-title h2 {
-  font-size: 42px;
+  font-size: 38px;
   font-weight: 700;
   color: #111827;
   margin-bottom: 15px;
 }
 
 .section-title p {
+  margin-top: 10px;
   font-size: 16px;
   line-height: 1.8;
   color: #64748b;
@@ -444,17 +451,22 @@ nav button {
   margin: auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 28px;
+  gap: 22px;
 }
 
 .feature-card {
-  background: #fff;
-  border-radius: 22px;
-  padding: 35px 28px;
+  background: #ffffff;
+  padding: 28px 22px;
+  min-height: 230px;
+  border-radius: 18px;
   text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   border: 1px solid #e5e7eb;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
-  transition: all 0.35s ease;
+  transition: 0.25s;
 }
 
 .feature-card:hover {
@@ -463,14 +475,22 @@ nav button {
 }
 
 .feature-card svg {
-  width: 70px;
-  height: 70px;
-  padding: 18px;
-  margin-bottom: 20px;
-  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 34px;
   color: #16a34a;
+
   background: #dcfce7;
-  transition: 0.35s;
+  padding: 10px;
+
+  width: 48px;
+  height: 48px;
+
+  border-radius: 12px;
+  margin: 0 auto 15px;
+  flex-shrink: 0;
 }
 
 .feature-card:hover svg {
@@ -479,15 +499,15 @@ nav button {
 }
 
 .feature-card h3 {
-  font-size: 22px;
+  font-size: 20px;
   color: #111827;
   margin-bottom: 12px;
 }
 
 .feature-card p {
   color: #64748b;
-  line-height: 1.8;
-  font-size: 15px;
+  line-height: 1.7;
+  font-size: 14px;
 }
 
 /* ================= HOW IT WORKS ================= */

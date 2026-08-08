@@ -1,55 +1,135 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  FaLeaf,
+  FaEnvelope,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
+  FaGoogle,
+  FaArrowRight,
+} from "react-icons/fa";
 import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // Temporary login
-    if (email && password) {
-      navigate("/dashboard");
+    if (!formData.email || !formData.password) {
+      alert("Please enter email and password");
+      return;
     }
+
+    navigate("/dashboard");
   };
 
   return (
-    <div className="login-container">
+    <div className="login-page">
       <div className="login-card">
-        <div className="login-logo">🌿</div>
+        {/* LOGO */}
+        <div className="login-logo">
+          <div className="logo-circle">
+            <FaLeaf />
+          </div>
 
-        <h1>FarmVerse</h1>
+          <h1>FarmVerse</h1>
 
-        <p>Welcome back, Farmer</p>
+          <p>Welcome back, Farmer</p>
+        </div>
 
+        {/* FORM */}
         <form onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          {/* EMAIL */}
+          <div className="input-group">
+            <label>Email</label>
 
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <div className="input-box">
+              <FaEnvelope />
 
-          <button type="submit">Login</button>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          {/* PASSWORD */}
+          <div className="input-group">
+            <div className="password-heading">
+              <label>Password</label>
+
+              <button
+                type="button"
+                onClick={() => alert("Forgot password feature coming soon!")}
+              >
+                Forgot Password?
+              </button>
+            </div>
+
+            <div className="input-box">
+              <FaLock />
+
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+
+              <span
+                className="eye"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
+          </div>
+
+          {/* LOGIN */}
+          <button className="login-btn" type="submit">
+            Login
+            <FaArrowRight />
+          </button>
         </form>
 
-        <div className="login-links">
-          <span onClick={() => navigate("/forgot-password")}>
-            Forgot Password?
-          </span>
+        {/* DIVIDER */}
+        <div className="divider">
+          <span>or continue with</span>
+        </div>
 
-          <span onClick={() => navigate("/signup")}>Create Account</span>
+        {/* GOOGLE */}
+        <button className="google-btn">
+          <FaGoogle />
+          Continue with Google
+        </button>
+
+        {/* SIGNUP */}
+        <div className="signup">
+          <span>Don't have an account?</span>
+
+          <button onClick={() => navigate("/signup")}>Create Account</button>
         </div>
       </div>
     </div>
