@@ -59,3 +59,258 @@ ol {
 section {
   width: 100%;
 }
+/* =====================================================
+   FARMVERSE GLOBAL DARK THEME
+   Applies to the COMPLETE WEBSITE
+===================================================== */
+
+html.dark-theme,
+html.dark-theme body,
+html.dark-theme #root {
+  background: #101713;
+  color: #edf5ef;
+}
+
+/* ===============================
+   COMMON PAGE BACKGROUND
+================================ */
+
+html.dark-theme .dashboard-page,
+html.dark-theme .dashboard-main,
+html.dark-theme .settings-page,
+html.dark-theme .profile-page,
+html.dark-theme .landing-page,
+html.dark-theme .login-page,
+html.dark-theme .register-page {
+  background: #101713;
+  color: #edf5ef;
+}
+
+/* ===============================
+   COMMON CARDS
+================================ */
+
+html.dark-theme .dashboard-card,
+html.dark-theme .overview-card,
+html.dark-theme .farm-summary-card,
+html.dark-theme .feature-placeholder,
+html.dark-theme .settings-card,
+html.dark-theme .profile-card,
+html.dark-theme .login-card,
+html.dark-theme .register-card {
+  background: #18211c;
+  color: #edf5ef;
+  border-color: #2b372f;
+  box-shadow: none;
+}
+
+/* ===============================
+   HEADINGS
+================================ */
+
+html.dark-theme h1,
+html.dark-theme h2,
+html.dark-theme h3,
+html.dark-theme h4,
+html.dark-theme strong {
+  color: #edf5ef;
+}
+
+/* ===============================
+   TEXT
+================================ */
+
+html.dark-theme p {
+  color: #98a69d;
+}
+
+html.dark-theme small,
+html.dark-theme span {
+  color: #91a097;
+}
+
+/* ===============================
+   SIDEBAR
+================================ */
+
+html.dark-theme .dashboard-sidebar {
+  background: #151d18;
+  border-color: #2b372f;
+}
+
+html.dark-theme .dashboard-logo span {
+  color: #edf5ef;
+}
+
+html.dark-theme .sidebar-link {
+  color: #aebbb3;
+}
+
+html.dark-theme .sidebar-link:hover {
+  background: #202b24;
+  color: #68cf88;
+}
+
+html.dark-theme .sidebar-link.active {
+  background: #1e3827;
+  color: #6bd58c;
+}
+
+/* ===============================
+   NAVBAR / HEADER
+================================ */
+
+html.dark-theme .dashboard-header,
+html.dark-theme .settings-header,
+html.dark-theme .navbar {
+  background: #17201b;
+  border-color: #2b372f;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+
+html.dark-theme button {
+  color: #d9e5dd;
+}
+
+html.dark-theme .view-btn,
+html.dark-theme .card-header button,
+html.dark-theme .profile-btn,
+html.dark-theme .back-btn {
+  background: #202a24;
+  color: #cbd6cf;
+  border-color: #354239;
+}
+
+html.dark-theme .view-btn:hover,
+html.dark-theme .card-header button:hover,
+html.dark-theme .profile-btn:hover,
+html.dark-theme .back-btn:hover {
+  background: #29352e;
+}
+
+/* ===============================
+   INPUTS / SELECT
+================================ */
+
+html.dark-theme input,
+html.dark-theme select,
+html.dark-theme textarea {
+  background: #202a24;
+  color: #edf5ef;
+  border-color: #354239;
+}
+
+html.dark-theme input::placeholder,
+html.dark-theme textarea::placeholder {
+  color: #718077;
+}
+
+html.dark-theme input:focus,
+html.dark-theme select:focus,
+html.dark-theme textarea:focus {
+  background: #202a24;
+  border-color: #4eae6d;
+}
+
+/* ===============================
+   TABLE
+================================ */
+
+html.dark-theme table {
+  background: #18211c;
+  color: #edf5ef;
+}
+
+html.dark-theme th {
+  background: #202a24;
+  color: #dce7df;
+}
+
+html.dark-theme td {
+  border-color: #2b372f;
+  color: #aab7af;
+}
+
+/* ===============================
+   DROPDOWNS
+================================ */
+
+html.dark-theme .dropdown,
+html.dark-theme .notification-dropdown,
+html.dark-theme .profile-dropdown {
+  background: #18211c;
+  border-color: #354239;
+  color: #edf5ef;
+}
+
+/* ===============================
+   MOBILE NAV
+================================ */
+
+html.dark-theme .mobile-bottom-nav {
+  background: #17201b;
+  border-color: #2b372f;
+}
+
+html.dark-theme .mobile-nav-item {
+  color: #8f9d95;
+}
+
+html.dark-theme .mobile-nav-item.active {
+  color: #68cf88;
+}
+
+/* ===============================
+   AI SECTION
+================================ */
+
+html.dark-theme .ai-recommendation {
+  background: #183021;
+  border-color: #2f6040;
+}
+
+html.dark-theme .ai-recommendation h2 {
+  color: #edf5ef;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+
+html.dark-theme footer,
+html.dark-theme .dashboard-footer,
+html.dark-theme .settings-footer {
+  color: #68766e;
+}
+
+/* ===============================
+   OVERLAY
+================================ */
+
+html.dark-theme .sidebar-overlay {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+/* ===============================
+   SCROLLBAR
+================================ */
+
+html.dark-theme ::-webkit-scrollbar {
+  width: 8px;
+}
+
+html.dark-theme ::-webkit-scrollbar-track {
+  background: #101713;
+}
+
+html.dark-theme ::-webkit-scrollbar-thumb {
+  background: #354239;
+  border-radius: 10px;
+}
+
+html.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: #4a5a4e;
+}
