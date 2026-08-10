@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.farmverse.dto.LoginRequest;
 import com.farmverse.dto.LoginResponse;
+import com.farmverse.dto.UpdateProfileRequest;
+import com.farmverse.dto.UserProfileResponse;
 import com.farmverse.dto.UserRequest;
 import com.farmverse.response.ApiResponse;
 import com.farmverse.service.UserService;
@@ -33,7 +35,21 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ApiResponse profile() {
-        return new ApiResponse("JWT authentication is working");
-}
+    public UserProfileResponse profile(
+            org.springframework.security.core.Authentication authentication) {
+
+        String email = authentication.getName();
+
+        return userService.getProfile(email);
+    }
+
+    @PutMapping("/profile")
+    public UserProfileResponse updateProfile(
+            @RequestBody UpdateProfileRequest request,
+            org.springframework.security.core.Authentication authentication) {
+
+        String email = authentication.getName();
+
+        return userService.updateProfile(email, request);
+    }
 }
