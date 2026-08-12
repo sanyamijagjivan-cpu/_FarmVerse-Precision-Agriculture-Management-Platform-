@@ -11,6 +11,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import jakarta.persistence.OneToMany;
+import java.util.List;
+import java.util.ArrayList;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -29,7 +36,12 @@ public class User {
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")
+    @JsonIgnore
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Farm> farms;
 
     public User() {
     }
@@ -65,4 +77,12 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Farm> getFarms() {
+        return farms;
+}
+
+    public void setFarms(List<Farm> farms) {
+        this.farms = farms;
+}
 }
