@@ -235,7 +235,7 @@ const Dashboard = () => {
 
           <button
             className="sidebar-link"
-            onClick={() => scrollToSection("disease")}
+            onClick={() => navigate("/disease-detection")}
           >
             <FaVirus />
             <span>Disease Detection</span>
@@ -243,7 +243,10 @@ const Dashboard = () => {
 
           <button
             className="sidebar-link"
-            onClick={() => scrollToSection("weather")}
+            onClick={() => {
+              closeSidebar();
+              navigate("/weather");
+            }}
           >
             <FaCloudSun />
             <span>Weather</span>
@@ -251,7 +254,10 @@ const Dashboard = () => {
 
           <button
             className="sidebar-link"
-            onClick={() => scrollToSection("market")}
+            onClick={() => {
+              closeSidebar();
+              navigate("/market-analysis");
+            }}
           >
             <FaChartLine />
             <span>Market Analysis</span>

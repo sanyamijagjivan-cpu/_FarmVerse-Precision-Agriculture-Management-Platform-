@@ -12,6 +12,9 @@ import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
 import AIAssistant from "./pages/AIAssistant/AIAssistant";
 import MyFarm from "./pages/MyFarm/MyFarm";
+import DiseaseDetection from "./pages/DiseaseDetection/DiseaseDetection";
+import MarketAnalysis from "./pages/MarketAnalysis/MarketAnalysis";
+import Weather from "./pages/Weather/Weather";
 
 function App() {
   return (
@@ -34,6 +37,9 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/ai-assistant" element={<AIAssistant />} />
         <Route path="/my-farm" element={<MyFarm />} />
+        <Route path="/disease-detection" element={<DiseaseDetection />} />
+        <Route path="/market-analysis" element={<MarketAnalysis />} />
+        <Route path="/weather" element={<Weather />} />
       </Routes>
     </BrowserRouter>
   );
