@@ -28,16 +28,47 @@ const Login = () => {
     });
   };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+ const handleLogin = async (e) => {
+  e.preventDefault();
 
-    if (!formData.email || !formData.password) {
-      alert("Please enter email and password");
-      return;
+  if (!formData.email || !formData.password) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      "http://localhost:8080/api/users/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Save JWT token
+      localStorage.setItem("token", data.token);
+
+      alert(data.message);
+
+      // Go to dashboard
+      navigate("/dashboard");
+    } else {
+      alert(data.message || "Login failed");
     }
-
-    navigate("/dashboard");
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Unable to connect to the backend");
+  }
+};
 
   return (
     <div className="login-page">

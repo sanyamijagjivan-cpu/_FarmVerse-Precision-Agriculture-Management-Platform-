@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -16,8 +17,6 @@ import {
   FaArrowUp,
   FaArrowDown,
   FaBalanceScale,
-  FaFilter,
-  FaCalendarAlt,
 } from "react-icons/fa";
 
 import "./MarketAnalysis.css";
@@ -89,7 +88,6 @@ function MarketAnalysis() {
       price: "₹2,850",
       change: "+8.4%",
       demand: "High",
-      distance: "12 km",
     },
     {
       name: "Nandyal Mandi",
@@ -97,7 +95,6 @@ function MarketAnalysis() {
       price: "₹2,920",
       change: "+10.2%",
       demand: "Very High",
-      distance: "38 km",
     },
     {
       name: "Adoni Mandi",
@@ -105,7 +102,6 @@ function MarketAnalysis() {
       price: "₹2,760",
       change: "+5.1%",
       demand: "Medium",
-      distance: "54 km",
     },
     {
       name: "Anantapur Mandi",
@@ -113,13 +109,23 @@ function MarketAnalysis() {
       price: "₹2,810",
       change: "+6.3%",
       demand: "High",
-      distance: "72 km",
     },
   ];
 
   const priceData = {
     "7D": [2380, 2460, 2510, 2640, 2580, 2740, 2850],
     "30D": [2140, 2280, 2350, 2420, 2510, 2590, 2680, 2740, 2850],
+  };
+
+  const changeLocation = () => {
+    const newLocation = window.prompt(
+      "Enter your farm location:",
+      location
+    );
+
+    if (newLocation && newLocation.trim() !== "") {
+      setLocation(newLocation.trim());
+    }
   };
 
   const selectedCropData =
@@ -129,264 +135,259 @@ function MarketAnalysis() {
   const maxValue = Math.max(...values);
   const minValue = Math.min(...values);
 
-  const changeLocation = () => {
-    const newLocation = window.prompt("Enter your farm location:", location);
-
-    if (newLocation && newLocation.trim()) {
-      setLocation(newLocation.trim());
-    }
-  };
-
   return (
     <div className="market-page">
-      {/* PLATFORM NAVBAR */}
-      <header className="market-navbar">
+      <nav className="market-navbar">
         <button
           className="market-back-button"
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/")}
         >
           <FaArrowLeft />
-          <span>Dashboard</span>
+          <span>Back to FarmVerse</span>
         </button>
 
-        <div className="market-brand">
-          <div className="market-brand-icon">
-            <FaLeaf />
+        <div className="market-logo">
+          <div className="market-logo-icon">
+            <FaSeedling />
           </div>
-
-          <div>
-            <strong>FarmVerse</strong>
-            <span>Market Intelligence</span>
-          </div>
+          <span>FarmVerse</span>
         </div>
 
         <button
-          className="market-ai-button"
+          className="market-ai-nav-button"
           onClick={() => navigate("/ai-farming-assistant")}
         >
           <FaRobot />
           <span>AI Assistant</span>
         </button>
-      </header>
+      </nav>
 
       <main className="market-main">
-        {/* PAGE HEADER */}
-        <section className="market-page-header">
-          <div>
-            <div className="market-breadcrumb">
-              Dashboard <span>/</span> Market Analysis
-            </div>
-
-            <h1>Market Analysis</h1>
-
-            <p>
-              Monitor crop prices, compare nearby markets and make better
-              selling decisions using current market indicators.
-            </p>
+        <section className="market-hero">
+          <div className="market-hero-badge">
+            <FaChartLine />
+            MARKET INTELLIGENCE
           </div>
 
-          <div className="market-status">
-            <span></span>
-            Market Data Available
-          </div>
+          <h1>
+            Know the Market.
+            <span>Sell at the Right Time.</span>
+          </h1>
+
+          <p>
+            Track crop prices, understand demand, compare nearby
+            markets, and discover better selling opportunities for
+            your harvest.
+          </p>
         </section>
 
-        {/* LOCATION + FILTER */}
-        <section className="market-toolbar">
-          <div className="market-location">
-            <div className="toolbar-icon">
+        <section className="market-location-card">
+          <div className="market-location-left">
+            <div className="market-location-icon">
               <FaMapMarkerAlt />
             </div>
 
             <div>
-              <span>FARM LOCATION</span>
-              <strong>{location}</strong>
+              <span>YOUR FARM REGION</span>
+              <h3>{location}</h3>
             </div>
-
-            <button onClick={changeLocation}>Change</button>
           </div>
 
-          <div className="market-filter">
-            <FaFilter />
-
-            <select
-              value={selectedCrop}
-              onChange={(e) => setSelectedCrop(e.target.value)}
-            >
-              {crops.map((crop) => (
-                <option key={crop.name} value={crop.name}>
-                  {crop.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <button
+            className="market-change-location"
+            onClick={changeLocation}
+          >
+            Change Location
+          </button>
         </section>
 
-        {/* KPI CARDS */}
-        <section className="market-kpis">
-          <div className="market-kpi-card">
-            <div className="kpi-icon">
+        <section className="market-overview">
+          <div className="market-overview-card primary-market-card">
+            <div className="overview-icon">
               <FaRupeeSign />
             </div>
 
             <div>
-              <span>CURRENT PRICE</span>
-              <strong>{selectedCropData.price}</strong>
-              <small>{selectedCropData.unit}</small>
+              <span>AVERAGE MARKET PRICE</span>
+              <strong>₹4,000</strong>
+              <small>per quintal</small>
             </div>
           </div>
 
-          <div className="market-kpi-card">
-            <div className="kpi-icon positive">
+          <div className="market-overview-card">
+            <div className="overview-icon green-icon">
               <FaArrowUp />
             </div>
 
             <div>
-              <span>PRICE CHANGE</span>
-              <strong>{selectedCropData.change}</strong>
+              <span>PRICE TREND</span>
+              <strong>+6.8%</strong>
               <small>This week</small>
             </div>
           </div>
 
-          <div className="market-kpi-card">
-            <div className="kpi-icon demand">
+          <div className="market-overview-card">
+            <div className="overview-icon gold-icon">
               <FaFire />
             </div>
 
             <div>
               <span>MARKET DEMAND</span>
-              <strong>{selectedCropData.demand}</strong>
+              <strong>High</strong>
               <small>Current demand</small>
             </div>
           </div>
 
-          <div className="market-kpi-card">
-            <div className="kpi-icon market">
+          <div className="market-overview-card">
+            <div className="overview-icon blue-icon">
               <FaStore />
             </div>
 
             <div>
-              <span>BEST MARKET</span>
-              <strong>Nandyal</strong>
-              <small>₹2,920 / quintal</small>
+              <span>MARKETS TRACKED</span>
+              <strong>12</strong>
+              <small>Nearby markets</small>
             </div>
           </div>
         </section>
 
-        {/* CROP PRICE TABLE */}
-        <section className="market-section">
-          <div className="section-heading">
+        <section className="crop-market-section">
+          <div className="market-section-heading">
             <div>
-              <span>MARKET OVERVIEW</span>
-              <h2>Crop Prices</h2>
+              <span>LIVE CROP PRICES</span>
+              <h2>Market Price Dashboard</h2>
             </div>
 
-            <p>Select a crop to view its detailed market trend.</p>
+            <p>
+              Monitor important crops and identify price movements
+              before deciding where to sell.
+            </p>
           </div>
 
-          <div className="price-table">
-            <div className="price-table-head">
+          <div className="crop-table-wrapper">
+            <div className="crop-table-header">
               <span>Crop</span>
               <span>Current Price</span>
               <span>Change</span>
               <span>Demand</span>
               <span>Market</span>
+              <span></span>
             </div>
 
             {crops.map((crop) => (
-              <button
-                className={`price-table-row ${
-                  selectedCrop === crop.name ? "active-crop" : ""
+              <div
+                className={`crop-table-row ${
+                  selectedCrop === crop.name
+                    ? "selected-crop-row"
+                    : ""
                 }`}
                 key={crop.name}
                 onClick={() => setSelectedCrop(crop.name)}
               >
-                <div className="crop-cell">
+                <div className="crop-name-cell">
                   <div className="crop-icon">{crop.icon}</div>
 
                   <div>
                     <strong>{crop.name}</strong>
-                    <small>Crop commodity</small>
+                    <span>Fresh market</span>
                   </div>
                 </div>
 
-                <div className="price-cell">
+                <div className="crop-price-cell">
                   <strong>{crop.price}</strong>
-                  <small>{crop.unit}</small>
+                  <span>{crop.unit}</span>
                 </div>
 
                 <div
-                  className={
-                    crop.trend === "up" ? "price-positive" : "price-negative"
-                  }
+                  className={`crop-change ${
+                    crop.trend === "up"
+                      ? "positive-change"
+                      : "negative-change"
+                  }`}
                 >
-                  {crop.trend === "up" ? <FaArrowUp /> : <FaArrowDown />}
+                  {crop.trend === "up" ? (
+                    <FaArrowUp />
+                  ) : (
+                    <FaArrowDown />
+                  )}
+
                   {crop.change}
                 </div>
 
                 <div>
                   <span
-                    className={`demand-tag ${
+                    className={`demand-badge ${
                       crop.demand === "Very High"
-                        ? "very-high"
+                        ? "very-high-demand"
                         : crop.demand === "High"
-                          ? "high"
-                          : "medium"
+                        ? "high-demand"
+                        : "medium-demand"
                     }`}
                   >
                     {crop.demand}
                   </span>
                 </div>
 
-                <div className="market-name">
+                <div className="crop-market-name">
                   {crop.market}
-                  <FaArrowRight />
                 </div>
-              </button>
+
+                <FaArrowRight className="row-arrow" />
+              </div>
             ))}
           </div>
         </section>
 
-        {/* CHART + MARKET SUMMARY */}
-        <section className="analysis-grid">
-          <div className="analysis-card chart-card">
-            <div className="card-header">
-              <div>
-                <span>PRICE TREND</span>
-                <h2>{selectedCrop} Market Trend</h2>
-              </div>
-
-              <div className="period-buttons">
-                <button
-                  className={period === "7D" ? "selected-period" : ""}
-                  onClick={() => setPeriod("7D")}
-                >
-                  7D
-                </button>
-
-                <button
-                  className={period === "30D" ? "selected-period" : ""}
-                  onClick={() => setPeriod("30D")}
-                >
-                  30D
-                </button>
-              </div>
+        <section className="price-analysis-section">
+          <div className="market-section-heading">
+            <div>
+              <span>PRICE ANALYSIS</span>
+              <h2>{selectedCrop} Price Trend</h2>
             </div>
 
-            <div className="chart-top">
+            <div className="period-selector">
+              <button
+                className={
+                  period === "7D" ? "active-period" : ""
+                }
+                onClick={() => setPeriod("7D")}
+              >
+                7D
+              </button>
+
+              <button
+                className={
+                  period === "30D" ? "active-period" : ""
+                }
+                onClick={() => setPeriod("30D")}
+              >
+                30D
+              </button>
+            </div>
+          </div>
+
+          <div className="price-chart-card">
+            <div className="chart-summary">
               <div>
-                <span>Current Price</span>
+                <span>CURRENT PRICE</span>
                 <strong>{selectedCropData.price}</strong>
+                <small>{selectedCropData.unit}</small>
               </div>
 
-              <div className="chart-change">
-                <FaChartLine />
-                {selectedCropData.change}
+              <div className="chart-growth">
+                {selectedCropData.trend === "up" ? (
+                  <FaArrowUp />
+                ) : (
+                  <FaArrowDown />
+                )}
+
+                <strong>{selectedCropData.change}</strong>
+                <span>Market movement</span>
               </div>
             </div>
 
-            <div className="chart-wrapper">
-              <div className="chart-y-labels">
+            <div className="price-chart">
+              <div className="chart-y-axis">
                 <span>₹3,000</span>
                 <span>₹2,750</span>
                 <span>₹2,500</span>
@@ -395,19 +396,35 @@ function MarketAnalysis() {
               </div>
 
               <div className="chart-area">
-                <div className="chart-grid">
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
+                <div className="chart-grid-lines">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </div>
 
-                <svg viewBox="0 0 900 300" preserveAspectRatio="none">
+                <svg
+                  className="price-svg"
+                  viewBox="0 0 900 300"
+                  preserveAspectRatio="none"
+                >
                   <defs>
-                    <linearGradient id="marketFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgba(61, 143, 78, 0.20)" />
-                      <stop offset="100%" stopColor="rgba(61, 143, 78, 0)" />
+                    <linearGradient
+                      id="marketGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="0%"
+                        stopColor="rgba(117, 202, 126, 0.35)"
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor="rgba(117, 202, 126, 0)"
+                      />
                     </linearGradient>
                   </defs>
 
@@ -415,168 +432,140 @@ function MarketAnalysis() {
                     d={
                       values
                         .map((value, index) => {
-                          const x = (index / (values.length - 1)) * 900;
+                          const x =
+                            (index / (values.length - 1)) * 900;
 
                           const y =
                             270 -
-                            ((value - minValue) / (maxValue - minValue || 1)) *
+                            ((value - minValue) /
+                              (maxValue - minValue || 1)) *
                               220;
 
                           return `${index === 0 ? "M" : "L"} ${x} ${y}`;
                         })
-                        .join(" ") + " L 900 300 L 0 300 Z"
+                        .join(" ") +
+                      " L 900 300 L 0 300 Z"
                     }
-                    fill="url(#marketFill)"
+                    fill="url(#marketGradient)"
                   />
 
                   <path
                     d={values
                       .map((value, index) => {
-                        const x = (index / (values.length - 1)) * 900;
+                        const x =
+                          (index / (values.length - 1)) * 900;
 
                         const y =
                           270 -
-                          ((value - minValue) / (maxValue - minValue || 1)) *
+                          ((value - minValue) /
+                            (maxValue - minValue || 1)) *
                             220;
 
                         return `${index === 0 ? "M" : "L"} ${x} ${y}`;
                       })
                       .join(" ")}
                     fill="none"
-                    stroke="#3d914f"
+                    stroke="#83d28d"
                     strokeWidth="4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
 
                   {values.map((value, index) => {
-                    const x = (index / (values.length - 1)) * 900;
+                    const x =
+                      (index / (values.length - 1)) * 900;
 
                     const y =
                       270 -
-                      ((value - minValue) / (maxValue - minValue || 1)) * 220;
+                      ((value - minValue) /
+                        (maxValue - minValue || 1)) *
+                        220;
 
                     return (
                       <circle
                         key={index}
                         cx={x}
                         cy={y}
-                        r="5"
-                        fill="#ffffff"
-                        stroke="#3d914f"
+                        r="6"
+                        fill="#0b1d11"
+                        stroke="#83d28d"
                         strokeWidth="3"
                       />
                     );
                   })}
                 </svg>
 
-                <div className="chart-days">
+                <div className="chart-x-axis">
                   {values.map((_, index) => (
                     <span key={index}>
-                      {period === "7D" ? `Day ${index + 1}` : `${index + 1}`}
+                      {period === "7D"
+                        ? `Day ${index + 1}`
+                        : `${index + 1}`}
                     </span>
                   ))}
                 </div>
               </div>
             </div>
           </div>
-
-          {/* MARKET SUMMARY */}
-          <div className="analysis-card summary-card">
-            <div className="card-header">
-              <div>
-                <span>MARKET SIGNAL</span>
-                <h2>Today's Summary</h2>
-              </div>
-
-              <FaChartBar />
-            </div>
-
-            <div className="summary-item">
-              <div className="summary-icon">
-                <FaArrowUp />
-              </div>
-
-              <div>
-                <span>Price Momentum</span>
-                <strong>Positive</strong>
-              </div>
-            </div>
-
-            <div className="summary-item">
-              <div className="summary-icon demand-icon">
-                <FaShoppingBasket />
-              </div>
-
-              <div>
-                <span>Demand Level</span>
-                <strong>High</strong>
-              </div>
-            </div>
-
-            <div className="summary-item">
-              <div className="summary-icon market-icon">
-                <FaStore />
-              </div>
-
-              <div>
-                <span>Recommended Market</span>
-                <strong>Nandyal Mandi</strong>
-              </div>
-            </div>
-
-            <div className="summary-note">
-              <FaBalanceScale />
-              <p>
-                Compare transportation costs before choosing the highest-price
-                market.
-              </p>
-            </div>
-          </div>
         </section>
 
-        {/* MARKET COMPARISON */}
-        <section className="market-section">
-          <div className="section-heading">
+        <section className="market-comparison-section">
+          <div className="market-section-heading">
             <div>
               <span>MARKET COMPARISON</span>
-              <h2>Nearby Markets</h2>
+              <h2>Where Should You Sell?</h2>
             </div>
 
-            <p>Compare current prices and demand before selling.</p>
+            <p>
+              Compare prices and demand across nearby markets to
+              find a potentially better selling opportunity.
+            </p>
           </div>
 
-          <div className="market-cards">
+          <div className="comparison-grid">
             {markets.map((market, index) => (
               <div
-                className={`market-card ${index === 1 ? "best-market" : ""}`}
+                className={`comparison-card ${
+                  index === 1 ? "best-market-card" : ""
+                }`}
                 key={market.name}
               >
-                {index === 1 && <div className="best-label">BEST PRICE</div>}
+                {index === 1 && (
+                  <div className="best-market-label">
+                    BEST PRICE
+                  </div>
+                )}
 
-                <div className="market-card-top">
-                  <div className="market-store">
+                <div className="comparison-top">
+                  <div className="market-store-icon">
                     <FaStore />
                   </div>
 
-                  <span>{market.distance}</span>
+                  <span className="market-distance">
+                    {index === 0
+                      ? "12 km"
+                      : index === 1
+                      ? "38 km"
+                      : index === 2
+                      ? "54 km"
+                      : "72 km"}
+                  </span>
                 </div>
 
                 <h3>{market.name}</h3>
 
-                <small>
-                  <FaMapMarkerAlt />
+                <span className="market-location-name">
                   {market.location}
-                </small>
+                </span>
 
-                <div className="market-card-price">
-                  {market.price}
+                <div className="comparison-price">
+                  <strong>{market.price}</strong>
                   <span>/ quintal</span>
                 </div>
 
-                <div className="market-card-details">
+                <div className="comparison-details">
                   <div>
-                    <span>Change</span>
+                    <span>Price change</span>
                     <strong>{market.change}</strong>
                   </div>
 
@@ -586,7 +575,7 @@ function MarketAnalysis() {
                   </div>
                 </div>
 
-                <button>
+                <button className="market-view-button">
                   View Market
                   <FaArrowRight />
                 </button>
@@ -595,44 +584,49 @@ function MarketAnalysis() {
           </div>
         </section>
 
-        {/* SELLING OPPORTUNITY */}
-        <section className="selling-card">
-          <div className="selling-icon">
+        <section className="selling-opportunity">
+          <div className="opportunity-icon">
             <FaBalanceScale />
           </div>
 
-          <div>
+          <div className="opportunity-content">
             <span>SMART SELLING OPPORTUNITY</span>
 
             <h2>
-              Nandyal Mandi currently offers the highest
-              {` ${selectedCrop.toLowerCase()}`} price nearby.
+              Nandyal Mandi currently offers the highest{" "}
+              {selectedCrop.toLowerCase()} price nearby.
             </h2>
 
             <p>
-              Current estimated price is ₹2,920 per quintal. Consider
-              transportation cost before making the final selling decision.
+              The current estimated price is ₹2,920 per quintal,
+              approximately 2.4% higher than the local average.
+              Consider transportation cost before making a final
+              selling decision.
             </p>
           </div>
 
-          <button>
+          <button className="opportunity-button">
             Compare Markets
             <FaArrowRight />
           </button>
         </section>
 
-        {/* INSIGHTS */}
-        <section className="market-section">
-          <div className="section-heading">
+        <section className="market-insights-section">
+          <div className="market-section-heading centered-market-heading">
             <div>
-              <span>MARKET INSIGHTS</span>
-              <h2>Key Market Indicators</h2>
+              <span>MARKET INTELLIGENCE</span>
+              <h2>What the Market Is Telling You</h2>
             </div>
+
+            <p>
+              Simple insights that help turn market data into
+              practical decisions.
+            </p>
           </div>
 
-          <div className="insight-grid">
+          <div className="insights-grid">
             <div className="insight-card">
-              <div>
+              <div className="insight-icon">
                 <FaChartBar />
               </div>
 
@@ -641,13 +635,13 @@ function MarketAnalysis() {
               <h3>Prices are moving upward</h3>
 
               <p>
-                Several tracked crops are showing positive weekly price
-                movement.
+                Several tracked crops are showing positive weekly
+                price movement, indicating stronger market activity.
               </p>
             </div>
 
             <div className="insight-card">
-              <div>
+              <div className="insight-icon">
                 <FaShoppingBasket />
               </div>
 
@@ -656,62 +650,66 @@ function MarketAnalysis() {
               <h3>Vegetable demand is strong</h3>
 
               <p>
-                Current demand indicators show stronger selling potential for
-                selected crops.
+                Current demand indicators suggest that selected
+                vegetable crops may have stronger selling potential.
               </p>
             </div>
 
             <div className="insight-card">
-              <div>
-                <FaCalendarAlt />
+              <div className="insight-icon">
+                <FaArrowUp />
               </div>
 
               <span>SELLING WINDOW</span>
 
-              <h3>Monitor the next few days</h3>
+              <h3>Watch the next few days</h3>
 
               <p>
-                Continue monitoring prices before selling large quantities of
-                your harvest.
+                Continue monitoring prices before selling large
+                quantities of your harvest.
               </p>
             </div>
           </div>
         </section>
 
-        {/* AI */}
-        <section className="market-ai-card">
-          <div className="ai-market-icon">
+        <section className="market-ai-cta">
+          <div className="market-ai-icon">
             <FaRobot />
           </div>
 
-          <div>
-            <span>FARMVERSE AI</span>
+          <div className="market-ai-content">
+            <span>MARKET + AI</span>
 
-            <h2>Need help with your selling decision?</h2>
+            <h2>
+              Need help deciding when and where to sell?
+            </h2>
 
             <p>
-              Ask FarmVerse AI about prices, market trends, demand and selling
-              opportunities.
+              Ask FarmVerse AI about crop prices, market trends,
+              demand, selling opportunities, and farm profitability.
             </p>
           </div>
 
-          <button onClick={() => navigate("/ai-farming-assistant")}>
+          <button
+            onClick={() => navigate("/ai-farming-assistant")}
+          >
             Ask FarmVerse AI
             <FaArrowRight />
           </button>
         </section>
 
-        {/* FOOTER */}
         <footer className="market-footer">
-          <div>
+          <div className="market-footer-brand">
             <FaLeaf />
-            <strong>FarmVerse</strong>
+            <span>FarmVerse</span>
           </div>
 
-          <span>Market Analysis • Smart Agriculture Platform</span>
+          <p>
+            Smart agriculture • Better decisions • Better harvests
+          </p>
 
-          <button onClick={() => navigate("/dashboard")}>
-            Back to Dashboard
+          <button onClick={() => navigate("/")}>
+            Back to Home
           </button>
         </footer>
       </main>

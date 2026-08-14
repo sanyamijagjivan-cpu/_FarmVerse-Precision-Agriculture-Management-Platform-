@@ -3,482 +3,658 @@ import { useNavigate } from "react-router-dom";
 import {
   FaArrowLeft,
   FaArrowRight,
-  FaCamera,
   FaCloudUploadAlt,
   FaLeaf,
   FaRobot,
   FaSearch,
+  FaShieldAlt,
+  FaRedo,
   FaCheckCircle,
   FaExclamationTriangle,
-  FaRedo,
+  FaChartLine,
   FaTimes,
-  FaShieldAlt,
 } from "react-icons/fa";
+
 import "./DiseaseDetection.css";
+
 const DiseaseDetection = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-  const cameraInputRef = useRef(null);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageName, setImageName] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showResult, setShowResult] = useState(false);
-  const [recentScans, setRecentScans] = useState(() => {
-    try {
-      const saved = localStorage.getItem("farmverseRecentScans");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-  const processImage = (file) => {
+
+  const handleImageSelect = (event) => {
+    const file = event.target.files?.[0];
+
     if (!file) return;
+
     if (!file.type.startsWith("image/")) {
       alert("Please select a valid image file.");
       return;
     }
+
     setImageName(file.name);
     setSelectedImage(URL.createObjectURL(file));
     setShowResult(false);
   };
-  const handleImageSelect = (event) => {
-    processImage(event.target.files?.[0]);
-  };
+
   const handleDrop = (event) => {
     event.preventDefault();
-    processImage(event.dataTransfer.files?.[0]);
-  };
-  const handleAnalyze = () => {
-    if (!selectedImage) {
-      alert("Please scan or upload a crop image first.");
+
+    const file = event.dataTransfer.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please drop a valid image file.");
       return;
     }
+
+    setImageName(file.name);
+    setSelectedImage(URL.createObjectURL(file));
+    setShowResult(false);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleAnalyze = () => {
+    if (!selectedImage) {
+      alert("Please upload a crop image first.");
+      return;
+    }
+
     setIsAnalyzing(true);
+
+    /*
+      TEMPORARY UI DEMO
+
+      Later your teammates can replace this section
+      with the actual disease-detection API/model.
+    */
+
     setTimeout(() => {
       setIsAnalyzing(false);
       setShowResult(true);
-      const newScan = {
-        id: Date.now(),
-        image: selectedImage,
-        name: imageName,
-        disease: "Early Blight",
-        confidence: "92%",
-        severity: "Moderate",
-        date: new Date().toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-      };
-      setRecentScans((previous) => {
-        const updated = [newScan, ...previous].slice(0, 5);
-        localStorage.setItem("farmverseRecentScans", JSON.stringify(updated));
-        return updated;
-      });
     }, 1800);
   };
+
   const handleReset = () => {
     setSelectedImage(null);
     setImageName("");
     setShowResult(false);
     setIsAnalyzing(false);
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-    if (cameraInputRef.current) {
-      cameraInputRef.current.value = "";
-    }
   };
-  const clearHistory = () => {
-    localStorage.removeItem("farmverseRecentScans");
-    setRecentScans([]);
-  };
+
   return (
     <div className="disease-page">
-      {" "}
-      {/* NAVBAR */}{" "}
+
+      {/* =========================================
+          TOP NAVIGATION
+          ========================================= */}
+
       <header className="disease-navbar">
-        {" "}
-        <button className="back-button" onClick={() => navigate("/")}>
-          {" "}
-          <FaArrowLeft /> <span>FarmVerse</span>{" "}
-        </button>{" "}
+
+        <button
+          className="back-button"
+          onClick={() => navigate("/")}
+        >
+          <FaArrowLeft />
+          <span>Back to FarmVerse</span>
+        </button>
+
         <div className="disease-logo">
-          {" "}
           <div className="disease-logo-icon">
-            {" "}
-            <FaLeaf />{" "}
-          </div>{" "}
-          <strong>Crop Health</strong>{" "}
-        </div>{" "}
-        {/* AI ASSISTANT */}{" "}
+            <FaLeaf />
+          </div>
+
+          <span>FarmVerse</span>
+        </div>
+
         <button
           className="ai-nav-button"
-          onClick={() => navigate("/ai-assistant")}
+          onClick={() => navigate("/ai-farming-assistant")}
         >
-          {" "}
-          <FaRobot /> AI Assistant{" "}
-        </button>{" "}
-      </header>{" "}
-      {/* MAIN */}{" "}
+          <FaRobot />
+          <span>AI Assistant</span>
+        </button>
+
+      </header>
+
+
+      {/* =========================================
+          HERO
+          ========================================= */}
+
       <main className="disease-main">
-        {" "}
-        {/* PAGE HEADER */}{" "}
-        <div className="page-header">
-          {" "}
-          <div>
-            {" "}
-            <span className="page-kicker">
-              {" "}
-              <FaShieldAlt /> CROP HEALTH{" "}
-            </span>{" "}
-            <h1>Crop Disease Detection</h1>{" "}
-            <p>
-              {" "}
-              Scan or upload a crop leaf image to identify possible diseases and
-              get practical recommendations.{" "}
-            </p>{" "}
-          </div>{" "}
-          <div className="header-status">
-            {" "}
-            <span className="status-dot"></span> AI Detection Ready{" "}
-          </div>{" "}
-        </div>{" "}
-        {/* WORKSPACE */}{" "}
-        <section className="detection-workspace">
-          {" "}
-          {/* LEFT */}{" "}
-          <div className="scan-section">
-            {" "}
-            <div className="section-top">
-              {" "}
+
+        <section className="disease-hero">
+
+          <div className="disease-hero-badge">
+            <FaShieldAlt />
+            <span>AI CROP HEALTH INTELLIGENCE</span>
+          </div>
+
+          <h1>
+            Protect Your Crops
+            <br />
+            With <span>Intelligent Diagnosis</span>
+          </h1>
+
+          <p>
+            Upload a clear image of your crop leaf and get an
+            AI-powered health assessment with actionable insights.
+          </p>
+
+        </section>
+
+
+        {/* =========================================
+            ANALYSIS WORKSPACE
+            ========================================= */}
+
+        <section className="diagnosis-workspace">
+
+          {/* =====================================
+              UPLOAD PANEL
+              ===================================== */}
+
+          <div className="upload-panel">
+
+            <div className="panel-heading">
               <div>
-                {" "}
-                <span>STEP 01</span> <h2>Scan Crop Leaf</h2>{" "}
-              </div>{" "}
-              {selectedImage && (
-                <button className="clear-button" onClick={handleReset}>
-                  {" "}
-                  <FaTimes /> Clear{" "}
-                </button>
-              )}{" "}
-            </div>{" "}
-            {!selectedImage ? (
-              <div
-                className="scan-area"
-                onDrop={handleDrop}
-                onDragOver={(e) => e.preventDefault()}
-              >
-                {" "}
-                <div className="scan-icon">
-                  {" "}
-                  <FaLeaf />{" "}
-                </div>{" "}
-                <h3>Check your crop health</h3>{" "}
-                <p>
-                  {" "}
-                  Take a photo of the affected leaf or upload an existing
-                  image.{" "}
-                </p>{" "}
-                <div className="scan-actions">
-                  {" "}
-                  <button
-                    className="camera-button"
-                    onClick={() => cameraInputRef.current?.click()}
-                  >
-                    {" "}
-                    <FaCamera /> Scan Leaf{" "}
-                  </button>{" "}
-                  <button
-                    className="upload-button"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    {" "}
-                    <FaCloudUploadAlt /> Upload Image{" "}
-                  </button>{" "}
-                </div>{" "}
-                <div className="drop-info">
-                  {" "}
-                  Or drag & drop an image here <br />{" "}
-                  <small>JPG, JPEG or PNG</small>{" "}
-                </div>{" "}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={handleImageSelect}
-                />{" "}
-                <input
-                  ref={cameraInputRef}
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  hidden
-                  onChange={handleImageSelect}
-                />{" "}
+                <span className="panel-label">STEP 01</span>
+                <h2>Upload Crop Image</h2>
               </div>
-            ) : (
-              <div className="image-workspace">
-                {" "}
-                <div className="image-container">
-                  {" "}
-                  <img src={selectedImage} alt="Selected crop" />{" "}
-                  <button className="image-remove" onClick={handleReset}>
-                    {" "}
-                    <FaTimes />{" "}
-                  </button>{" "}
-                </div>{" "}
-                <div className="image-details">
-                  {" "}
-                  <div className="image-file-info">
-                    {" "}
-                    <FaCheckCircle />{" "}
-                    <div>
-                      {" "}
-                      <strong>{imageName}</strong>{" "}
-                      <span>Image ready for analysis</span>{" "}
-                    </div>{" "}
-                  </div>{" "}
-                  <button onClick={() => fileInputRef.current?.click()}>
-                    {" "}
-                    Change{" "}
-                  </button>{" "}
-                </div>{" "}
+
+              <div className="panel-icon">
+                <FaCloudUploadAlt />
               </div>
-            )}{" "}
-            {/* ANALYZE */}{" "}
-            <button
-              className={`analyze-button ${isAnalyzing ? "analyzing" : ""}`}
-              onClick={handleAnalyze}
-              disabled={isAnalyzing || !selectedImage}
+            </div>
+
+
+            <div
+              className={`upload-area ${
+                selectedImage ? "has-image" : ""
+              }`}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={() => fileInputRef.current?.click()}
             >
-              {" "}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                hidden
+              />
+
+              {selectedImage ? (
+                <div className="image-preview-wrapper">
+
+                  <img
+                    src={selectedImage}
+                    alt="Selected crop"
+                    className="crop-preview"
+                  />
+
+                  <div className="image-overlay">
+                    <span>Change Image</span>
+                  </div>
+
+                </div>
+              ) : (
+                <>
+
+                  <div className="upload-icon">
+                    <FaCloudUploadAlt />
+                  </div>
+
+                  <h3>Upload a crop leaf image</h3>
+
+                  <p>
+                    Drag &amp; drop your image here or
+                    <span> browse files</span>
+                  </p>
+
+                  <small>
+                    JPG, JPEG or PNG • Clear images give better results
+                  </small>
+
+                </>
+              )}
+
+            </div>
+
+
+            {imageName && (
+              <div className="selected-file">
+
+                <div className="file-info">
+                  <FaCheckCircle />
+
+                  <div>
+                    <strong>{imageName}</strong>
+                    <span>Image ready for analysis</span>
+                  </div>
+                </div>
+
+                <button
+                  className="remove-image"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleReset();
+                  }}
+                  aria-label="Remove image"
+                >
+                  <FaTimes />
+                </button>
+
+              </div>
+            )}
+
+
+            <button
+              className={`analyze-button ${
+                isAnalyzing ? "analyzing" : ""
+              }`}
+              onClick={handleAnalyze}
+              disabled={isAnalyzing}
+            >
+
               {isAnalyzing ? (
                 <>
-                  {" "}
-                  <span className="loading-spinner"></span> Analyzing
-                  Crop...{" "}
+                  <span className="loading-spinner"></span>
+                  Analyzing Crop...
                 </>
               ) : (
                 <>
-                  {" "}
-                  <FaSearch /> Analyze Crop <FaArrowRight />{" "}
+                  <FaSearch />
+                  Analyze Crop
+                  <FaArrowRight />
                 </>
-              )}{" "}
-            </button>{" "}
-          </div>{" "}
-          {/* RIGHT */}{" "}
-          <div className="diagnosis-section">
-            {" "}
-            <div className="section-top">
-              {" "}
+              )}
+
+            </button>
+
+          </div>
+
+
+          {/* =====================================
+              RESULT PANEL
+              ===================================== */}
+
+          <div className="result-panel">
+
+            <div className="panel-heading">
+
               <div>
-                {" "}
-                <span>STEP 02</span> <h2>Diagnosis</h2>{" "}
-              </div>{" "}
-            </div>{" "}
+                <span className="panel-label">STEP 02</span>
+                <h2>AI Diagnosis</h2>
+              </div>
+
+              <div className="panel-icon result-icon">
+                <FaChartLine />
+              </div>
+
+            </div>
+
+
             {!showResult ? (
-              <div className="waiting-state">
-                {" "}
-                <div className="waiting-icon">
-                  {" "}
-                  <FaRobot />{" "}
-                </div>{" "}
-                <h3>Waiting for crop image</h3>{" "}
+              <div className="empty-result">
+
+                <div className="result-placeholder-icon">
+                  <FaLeaf />
+                </div>
+
+                <h3>
+                  Your diagnosis will appear here
+                </h3>
+
                 <p>
-                  {" "}
-                  Your AI diagnosis will appear here after you analyze a crop
-                  image.{" "}
-                </p>{" "}
-                <div className="detection-list">
-                  {" "}
+                  Upload a crop image and start the analysis
+                  to receive disease detection results.
+                </p>
+
+                <div className="result-features">
+
                   <div>
-                    {" "}
-                    <FaCheckCircle /> Disease identification{" "}
-                  </div>{" "}
+                    <FaCheckCircle />
+                    <span>Disease identification</span>
+                  </div>
+
                   <div>
-                    {" "}
-                    <FaCheckCircle /> Confidence level{" "}
-                  </div>{" "}
+                    <FaCheckCircle />
+                    <span>Confidence score</span>
+                  </div>
+
                   <div>
-                    {" "}
-                    <FaCheckCircle /> Recommended action{" "}
-                  </div>{" "}
-                </div>{" "}
+                    <FaCheckCircle />
+                    <span>Severity assessment</span>
+                  </div>
+
+                </div>
+
               </div>
             ) : (
               <div className="diagnosis-result">
-                {" "}
-                <div className="result-title">
-                  {" "}
-                  <div className="warning-icon">
-                    {" "}
-                    <FaExclamationTriangle />{" "}
-                  </div>{" "}
+
+                <div className="diagnosis-status">
+                  <div className="status-icon">
+                    <FaExclamationTriangle />
+                  </div>
+
                   <div>
-                    {" "}
-                    <span>DETECTED CONDITION</span> <h3>Early Blight</h3>{" "}
-                  </div>{" "}
-                </div>{" "}
-                <div className="confidence-row">
-                  {" "}
-                  <div>
-                    {" "}
-                    <span>AI Confidence</span> <strong>92%</strong>{" "}
-                  </div>{" "}
-                  <div>
-                    {" "}
-                    <span>Severity</span>{" "}
-                    <strong className="moderate"> Moderate </strong>{" "}
-                  </div>{" "}
-                </div>{" "}
-                <div className="confidence-bar">
-                  {" "}
-                  <div style={{ width: "92%" }}></div>{" "}
-                </div>{" "}
-                <div className="result-content">
-                  {" "}
-                  <span>OBSERVATION</span>{" "}
+                    <span>DETECTED CONDITION</span>
+                    <h3>Early Blight</h3>
+                  </div>
+                </div>
+
+
+                <div className="diagnosis-stats">
+
+                  <div className="diagnosis-stat">
+                    <span>Confidence</span>
+                    <strong>92%</strong>
+                  </div>
+
+                  <div className="diagnosis-stat">
+                    <span>Severity</span>
+                    <strong className="severity">
+                      Moderate
+                    </strong>
+                  </div>
+
+                </div>
+
+
+                <div className="diagnosis-progress">
+
+                  <div className="progress-header">
+                    <span>AI Confidence</span>
+                    <strong>92%</strong>
+                  </div>
+
+                  <div className="progress-track">
+                    <div
+                      className="progress-fill"
+                      style={{ width: "92%" }}
+                    ></div>
+                  </div>
+
+                </div>
+
+
+                <div className="result-section">
+
+                  <h4>What we found</h4>
+
                   <p>
-                    {" "}
-                    Brown spots and leaf discoloration detected. The visual
-                    pattern is commonly associated with early blight.{" "}
-                  </p>{" "}
-                </div>{" "}
-                <div className="recommendation">
-                  {" "}
-                  <span>RECOMMENDED ACTION</span>{" "}
+                    The image shows visual patterns commonly
+                    associated with early blight. Brown spots
+                    and leaf discoloration may indicate the
+                    beginning of an infection.
+                  </p>
+
+                </div>
+
+
+                <div className="result-section">
+
+                  <h4>Recommended actions</h4>
+
                   <ul>
-                    {" "}
+
                     <li>
-                      {" "}
-                      <FaCheckCircle /> Remove heavily affected leaves.{" "}
-                    </li>{" "}
+                      <FaCheckCircle />
+                      Remove heavily affected leaves.
+                    </li>
+
                     <li>
-                      {" "}
-                      <FaCheckCircle /> Avoid excess moisture on foliage.{" "}
-                    </li>{" "}
+                      <FaCheckCircle />
+                      Avoid excessive moisture on foliage.
+                    </li>
+
                     <li>
-                      {" "}
-                      <FaCheckCircle /> Monitor nearby plants regularly.{" "}
-                    </li>{" "}
-                  </ul>{" "}
-                </div>{" "}
-                {/* AI BUTTONS */}{" "}
-                <div className="result-buttons">
-                  {" "}
+                      <FaCheckCircle />
+                      Monitor nearby plants for symptoms.
+                    </li>
+
+                  </ul>
+
+                </div>
+
+
+                <div className="result-actions">
+
                   <button
                     className="ask-ai-button"
-                    onClick={() => navigate("/ai-assistant")}
+                    onClick={() =>
+                      navigate("/ai-farming-assistant")
+                    }
                   >
-                    {" "}
-                    <FaRobot /> Ask FarmVerse AI{" "}
-                  </button>{" "}
-                  <button className="new-analysis-button" onClick={handleReset}>
-                    {" "}
-                    <FaRedo /> New Scan{" "}
-                  </button>{" "}
-                </div>{" "}
-              </div>
-            )}{" "}
-          </div>{" "}
-        </section>{" "}
-        {/* RECENT SCANS */}{" "}
-        <section className="recent-scans">
-          {" "}
-          <div className="recent-header">
-            {" "}
-            <div>
-              {" "}
-              <span>ACTIVITY</span> <h2>Recent Scans</h2>{" "}
-            </div>{" "}
-            {recentScans.length > 0 && (
-              <button onClick={clearHistory}> Clear History </button>
-            )}{" "}
-          </div>{" "}
-          {recentScans.length === 0 ? (
-            <div className="recent-empty">
-              {" "}
-              <div className="recent-empty-icon">
-                {" "}
-                <FaLeaf />{" "}
-              </div>{" "}
-              <div>
-                {" "}
-                <h3>No recent scans</h3>{" "}
-                <p>
-                  {" "}
-                  Your analyzed crop images will appear here for quick
-                  reference.{" "}
-                </p>{" "}
-              </div>{" "}
-            </div>
-          ) : (
-            <div className="recent-list">
-              {" "}
-              {recentScans.map((scan) => (
-                <div className="recent-item" key={scan.id}>
-                  {" "}
-                  <img src={scan.image} alt={scan.disease} />{" "}
-                  <div className="recent-info">
-                    {" "}
-                    <strong>{scan.disease}</strong> <span>{scan.name}</span>{" "}
-                    <small>{scan.date}</small>{" "}
-                  </div>{" "}
-                  <div className="recent-result">
-                    {" "}
-                    <strong>{scan.confidence}</strong>{" "}
-                    <span>{scan.severity}</span>{" "}
-                  </div>{" "}
+                    <FaRobot />
+                    Ask FarmVerse AI
+                    <FaArrowRight />
+                  </button>
+
+                  <button
+                    className="new-analysis-button"
+                    onClick={handleReset}
+                  >
+                    <FaRedo />
+                    New Analysis
+                  </button>
+
                 </div>
-              ))}{" "}
+
+              </div>
+            )}
+
+          </div>
+
+        </section>
+
+
+        {/* =========================================
+            HOW IT WORKS
+            ========================================= */}
+
+        <section className="detection-guide">
+
+          <div className="guide-heading">
+
+            <span>HOW IT WORKS</span>
+
+            <h2>
+              From Image to Insight
+            </h2>
+
+            <p>
+              A simple three-step process designed for
+              quick and understandable crop health checks.
+            </p>
+
+          </div>
+
+
+          <div className="guide-grid">
+
+            <div className="guide-card">
+
+              <div className="guide-number">
+                01
+              </div>
+
+              <div className="guide-icon">
+                <FaCloudUploadAlt />
+              </div>
+
+              <h3>Upload</h3>
+
+              <p>
+                Take a clear photo of the affected crop leaf
+                and upload it for analysis.
+              </p>
+
             </div>
-          )}{" "}
-        </section>{" "}
-        {/* TIPS */}{" "}
-        <section className="scan-tips">
-          {" "}
-          <div>
-            {" "}
-            <FaLeaf />{" "}
+
+
+            <div className="guide-card">
+
+              <div className="guide-number">
+                02
+              </div>
+
+              <div className="guide-icon">
+                <FaRobot />
+              </div>
+
+              <h3>AI Analysis</h3>
+
+              <p>
+                FarmVerse analyzes visual patterns to identify
+                potential crop health problems.
+              </p>
+
+            </div>
+
+
+            <div className="guide-card">
+
+              <div className="guide-number">
+                03
+              </div>
+
+              <div className="guide-icon">
+                <FaShieldAlt />
+              </div>
+
+              <h3>Take Action</h3>
+
+              <p>
+                Understand the result and get practical next
+                steps to protect your crop.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        {/* =========================================
+            AI ASSISTANT CTA
+            ========================================= */}
+
+        <section className="disease-ai-cta">
+
+          <div className="cta-ai-icon">
+            <FaRobot />
+          </div>
+
+          <div className="cta-ai-content">
+
+            <span>NEED MORE HELP?</span>
+
+            <h2>
+              Talk to FarmVerse AI
+            </h2>
+
+            <p>
+              Have questions about your crop, treatment,
+              weather, or farming decisions? Ask our AI
+              farming assistant.
+            </p>
+
+          </div>
+
+          <button
+            onClick={() =>
+              navigate("/ai-farming-assistant")
+            }
+          >
+            Open AI Assistant
+            <FaArrowRight />
+          </button>
+
+        </section>
+
+
+        {/* =========================================
+            RECENT SCANS
+            ========================================= */}
+
+        <section className="recent-scans">
+
+          <div className="recent-heading">
+
             <div>
-              {" "}
-              <strong>Use a clear leaf image</strong>{" "}
-              <span> Keep the affected area visible and well lit. </span>{" "}
-            </div>{" "}
-          </div>{" "}
-          <div>
-            {" "}
-            <FaCamera />{" "}
+              <span>YOUR ACTIVITY</span>
+              <h2>Recent Crop Scans</h2>
+            </div>
+
+            <p>
+              Your latest crop health checks will appear here.
+            </p>
+
+          </div>
+
+
+          <div className="scan-placeholder">
+
+            <div className="scan-placeholder-icon">
+              <FaLeaf />
+            </div>
+
             <div>
-              {" "}
-              <strong>Capture close to the leaf</strong>{" "}
-              <span> Avoid blurry or distant photos. </span>{" "}
-            </div>{" "}
-          </div>{" "}
-          <div>
-            {" "}
-            <FaShieldAlt />{" "}
-            <div>
-              {" "}
-              <strong>AI result is an indication</strong>{" "}
-              <span> Consult an expert for critical crop issues. </span>{" "}
-            </div>{" "}
-          </div>{" "}
-        </section>{" "}
-      </main>{" "}
-      {/* FOOTER */}{" "}
+              <h3>No recent scans yet</h3>
+              <p>
+                Your analyzed crop images will be shown here
+                for quick reference.
+              </p>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+
+      {/* =========================================
+          FOOTER
+          ========================================= */}
+
       <footer className="disease-footer">
-        {" "}
-        <div>
-          {" "}
-          <FaLeaf /> <strong>FarmVerse</strong>{" "}
-        </div>{" "}
-        <span> Smart crop health monitoring powered by AI </span>{" "}
-        <button onClick={() => navigate("/")}> Back to Home </button>{" "}
-      </footer>{" "}
+
+        <div className="footer-brand">
+          <FaLeaf />
+          <span>FarmVerse</span>
+        </div>
+
+        <p>
+          Smart farming powered by artificial intelligence.
+        </p>
+
+        <button onClick={() => navigate("/")}>
+          Back to Home
+        </button>
+
+      </footer>
+
     </div>
   );
 };
+
 export default DiseaseDetection;

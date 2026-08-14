@@ -12,6 +12,8 @@ import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
 import AIAssistant from "./pages/AIAssistant/AIAssistant";
 import MyFarm from "./pages/MyFarm/MyFarm";
+
+import AIFarmingAssistant from "./pages/FarmingAssistant/AIFarmingAssistant";
 import DiseaseDetection from "./pages/DiseaseDetection/DiseaseDetection";
 import MarketAnalysis from "./pages/MarketAnalysis/MarketAnalysis";
 import Weather from "./pages/Weather/Weather";
@@ -32,14 +34,23 @@ function App() {
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
 
-        {/* Profile */}
+        {/* User Pages */}
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/ai-assistant" element={<AIAssistant />} />
         <Route path="/my-farm" element={<MyFarm />} />
-        <Route path="/disease-detection" element={<DiseaseDetection />} />
-        <Route path="/market-analysis" element={<MarketAnalysis />} />
+
+        {/* New Features */}
+        <Route
+          path="/ai-farming-assistant"
+          element={<AIFarmingAssistant />}
+        />
+        <Route
+          path="/disease-detection"
+          element={<DiseaseDetection />}
+        />
         <Route path="/weather" element={<Weather />} />
+        <Route path="/market-analysis" element={<MarketAnalysis />} />
       </Routes>
     </BrowserRouter>
   );

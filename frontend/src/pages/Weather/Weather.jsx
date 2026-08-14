@@ -1,220 +1,294 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   FaArrowLeft,
-  FaLeaf,
   FaRobot,
   FaMapMarkerAlt,
-  FaCloudSun,
   FaTint,
   FaWind,
   FaCloudRain,
   FaSun,
   FaSeedling,
+  FaFlask,
+  FaTractor,
   FaExclamationTriangle,
-  FaCheckCircle,
-  FaCalendarAlt,
+  FaLeaf,
   FaArrowRight,
+  FaCloudSun,
 } from "react-icons/fa";
 
 import "./Weather.css";
 
-const Weather = () => {
+function Weather() {
   const navigate = useNavigate();
 
-  const hourlyData = [
-    { time: "Now", temp: "27°", rain: "10%", icon: <FaCloudSun /> },
-    { time: "01 PM", temp: "28°", rain: "12%", icon: <FaCloudSun /> },
-    { time: "02 PM", temp: "29°", rain: "15%", icon: <FaSun /> },
-    { time: "03 PM", temp: "28°", rain: "18%", icon: <FaCloudSun /> },
-    { time: "04 PM", temp: "27°", rain: "22%", icon: <FaCloudRain /> },
-    { time: "05 PM", temp: "26°", rain: "25%", icon: <FaCloudRain /> },
+  const [location, setLocation] = useState("Kurnool, Andhra Pradesh");
+
+  const hourlyForecast = [
+    { time: "06 AM", icon: <FaSun />, temp: "24°", rain: "10%" },
+    { time: "09 AM", icon: <FaSun />, temp: "27°", rain: "10%" },
+    { time: "12 PM", icon: <FaCloudSun />, temp: "30°", rain: "20%" },
+    { time: "03 PM", icon: <FaCloudRain />, temp: "31°", rain: "65%" },
+    { time: "06 PM", icon: <FaCloudRain />, temp: "28°", rain: "72%" },
+    { time: "09 PM", icon: <FaCloudSun />, temp: "25°", rain: "30%" },
   ];
 
-  const weeklyData = [
+  const weeklyForecast = [
     {
       day: "TODAY",
-      condition: "Mostly Cloudy",
+      icon: <FaSun />,
+      condition: "Sunny",
       high: "29°",
       low: "23°",
       rain: "20%",
-      icon: <FaCloudSun />,
-    },
-    {
-      day: "SAT",
-      condition: "Partly Cloudy",
-      high: "30°",
-      low: "23°",
-      rain: "15%",
-      icon: <FaCloudSun />,
-    },
-    {
-      day: "SUN",
-      condition: "Light Rain",
-      high: "27°",
-      low: "22°",
-      rain: "45%",
-      icon: <FaCloudRain />,
     },
     {
       day: "MON",
-      condition: "Cloudy",
-      high: "28°",
-      low: "22°",
-      rain: "30%",
       icon: <FaCloudSun />,
+      condition: "Partly Cloudy",
+      high: "30°",
+      low: "24°",
+      rain: "30%",
     },
     {
       day: "TUE",
-      condition: "Sunny",
-      high: "30°",
+      icon: <FaCloudRain />,
+      condition: "Rain",
+      high: "28°",
       low: "23°",
-      rain: "10%",
-      icon: <FaSun />,
+      rain: "75%",
     },
     {
       day: "WED",
-      condition: "Mostly Cloudy",
-      high: "29°",
+      icon: <FaCloudRain />,
+      condition: "Rain",
+      high: "27°",
       low: "22°",
-      rain: "18%",
-      icon: <FaCloudSun />,
+      rain: "80%",
     },
     {
       day: "THU",
-      condition: "Light Rain",
-      high: "27°",
-      low: "21°",
-      rain: "40%",
-      icon: <FaCloudRain />,
+      icon: <FaCloudSun />,
+      condition: "Cloudy",
+      high: "28°",
+      low: "23°",
+      rain: "50%",
+    },
+    {
+      day: "FRI",
+      icon: <FaSun />,
+      condition: "Sunny",
+      high: "31°",
+      low: "24°",
+      rain: "15%",
+    },
+    {
+      day: "SAT",
+      icon: <FaSun />,
+      condition: "Sunny",
+      high: "32°",
+      low: "25°",
+      rain: "10%",
     },
   ];
 
+  const changeLocation = () => {
+    const newLocation = window.prompt(
+      "Enter your farm location:",
+      location
+    );
+
+    if (newLocation && newLocation.trim() !== "") {
+      setLocation(newLocation.trim());
+    }
+  };
+
   return (
     <div className="weather-page">
-      {/* NAVBAR */}
-      <header className="weather-navbar">
+
+      {/* =========================================
+          NAVBAR
+          ========================================= */}
+
+      <nav className="weather-navbar">
+
         <button
           className="weather-back-button"
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/")}
         >
           <FaArrowLeft />
-          <span>Back to Dashboard</span>
+          <span>Back to FarmVerse</span>
         </button>
 
         <div className="weather-logo">
           <div className="weather-logo-icon">
-            <FaLeaf />
+            <FaSeedling />
           </div>
+
           <span>FarmVerse</span>
         </div>
 
         <button
           className="weather-ai-nav-button"
-          onClick={() => navigate("/ai-assistant")}
+          onClick={() => navigate("/ai-farming-assistant")}
         >
           <FaRobot />
           <span>AI Assistant</span>
         </button>
-      </header>
 
-      {/* MAIN */}
+      </nav>
+
+
+      {/* =========================================
+          MAIN
+          ========================================= */}
+
       <main className="weather-main">
-        {/* HERO */}
+
+        {/* =========================================
+            HERO
+            ========================================= */}
+
         <section className="weather-hero">
+
           <div className="weather-hero-badge">
             <FaCloudSun />
-            LIVE WEATHER INTELLIGENCE
+            FARM WEATHER INTELLIGENCE
           </div>
 
           <h1>
-            Weather for
-            <span>Smarter Farming</span>
+            Weather That Works
+            <span> For Your Farm</span>
           </h1>
 
           <p>
-            Get accurate weather insights, forecasts and farming recommendations
-            to make better decisions for your crops.
+            Understand local weather conditions and turn forecasts
+            into smarter farming decisions for irrigation, spraying,
+            sowing, and field activities.
           </p>
+
         </section>
 
-        {/* LOCATION */}
+
+        {/* =========================================
+            LOCATION
+            ========================================= */}
+
         <section className="farm-location-card">
+
           <div className="location-left">
+
             <div className="location-icon">
               <FaMapMarkerAlt />
             </div>
 
             <div>
               <span>FARM LOCATION</span>
-              <h3>Pune, Maharashtra, India</h3>
+              <h3>{location}</h3>
             </div>
+
           </div>
 
-          <button className="change-location-button">Change Location</button>
+          <button
+            className="change-location-button"
+            onClick={changeLocation}
+          >
+            Change Location
+          </button>
+
         </section>
 
-        {/* CURRENT WEATHER */}
+
+        {/* =========================================
+            CURRENT WEATHER
+            ========================================= */}
+
         <section className="current-weather-section">
+
           <div className="current-weather-card">
+
             <div className="current-weather-main">
-              <span className="section-mini-label">CURRENT CONDITIONS</span>
+
+              <span className="section-mini-label">
+                CURRENT WEATHER
+              </span>
 
               <div className="temperature-row">
+
                 <div className="main-weather-icon">
-                  <FaCloudSun />
+                  <FaSun />
                 </div>
 
                 <div>
                   <div className="main-temperature">
-                    27<span>°C</span>
+                    29°
+                    <span>C</span>
                   </div>
 
-                  <p>Mostly Cloudy</p>
+                  <p>Mostly Sunny</p>
                 </div>
+
               </div>
 
-              <span className="feels-like">Feels like 28°C</span>
+              <span className="feels-like">
+                Feels like 31°C • Updated 10 minutes ago
+              </span>
+
             </div>
 
+
             <div className="weather-condition">
+
               <div className="condition-status">
                 <span className="status-dot"></span>
                 GOOD CONDITIONS
               </div>
 
               <p>
-                Current weather conditions are suitable for normal farm
-                activities and crop monitoring.
+                Suitable conditions for most outdoor
+                farming activities.
               </p>
+
             </div>
+
           </div>
 
-          {/* METRICS */}
+
+          {/* WEATHER METRICS */}
+
           <div className="weather-metrics">
+
             <div className="weather-metric-card">
+
               <div className="metric-icon temperature-icon">
                 <FaSun />
               </div>
 
               <div>
                 <span>Temperature</span>
-                <strong>27°C</strong>
+                <strong>29°C</strong>
               </div>
+
             </div>
 
+
             <div className="weather-metric-card">
+
               <div className="metric-icon humidity-icon">
                 <FaTint />
               </div>
 
               <div>
                 <span>Humidity</span>
-                <strong>65%</strong>
+                <strong>68%</strong>
               </div>
+
             </div>
 
+
             <div className="weather-metric-card">
+
               <div className="metric-icon rain-icon">
                 <FaCloudRain />
               </div>
@@ -223,64 +297,102 @@ const Weather = () => {
                 <span>Rain Chance</span>
                 <strong>20%</strong>
               </div>
+
             </div>
 
+
             <div className="weather-metric-card">
+
               <div className="metric-icon wind-icon">
                 <FaWind />
               </div>
 
               <div>
                 <span>Wind Speed</span>
-                <strong>12 km/h</strong>
+                <strong>14 km/h</strong>
               </div>
+
             </div>
+
           </div>
+
         </section>
 
-        {/* FARM ALERT */}
+
+        {/* =========================================
+            FARM WEATHER ALERT
+            ========================================= */}
+
         <section className="farm-weather-alert">
+
           <div className="alert-icon">
             <FaExclamationTriangle />
           </div>
 
           <div className="alert-content">
+
             <span>FARM WEATHER ALERT</span>
 
-            <h3>Good conditions for field activities</h3>
+            <h3>
+              Heavy rainfall expected tomorrow afternoon
+            </h3>
 
             <p>
-              Weather conditions are currently favorable. Continue regular crop
-              monitoring and irrigation based on soil moisture levels.
+              Rain probability is expected to increase significantly.
+              Consider delaying fertilizer or spray application
+              and check field drainage before the rainfall.
             </p>
+
           </div>
 
           <button className="alert-details-button">
             View Details
             <FaArrowRight />
           </button>
+
         </section>
 
-        {/* HOURLY FORECAST */}
+
+        {/* =========================================
+            HOURLY FORECAST
+            ========================================= */}
+
         <section className="forecast-section">
+
           <div className="section-heading">
+
             <div>
-              <span>HOURLY FORECAST</span>
+              <span>HOURLY CONDITIONS</span>
+
               <h2>Today's Weather</h2>
             </div>
 
-            <p>Monitor temperature and rainfall changes throughout the day.</p>
+            <p>
+              Plan your field activities around today's
+              weather conditions.
+            </p>
+
           </div>
 
-          <div className="hourly-forecast">
-            {hourlyData.map((item, index) => (
-              <div
-                className={`hour-card ${index === 0 ? "hour-card-active" : ""}`}
-                key={index}
-              >
-                <span className="hour-time">{item.time}</span>
 
-                <div className="hour-icon">{item.icon}</div>
+          <div className="hourly-forecast">
+
+            {hourlyForecast.map((item, index) => (
+
+              <div
+                className={`hour-card ${
+                  index === 3 ? "hour-card-active" : ""
+                }`}
+                key={item.time}
+              >
+
+                <span className="hour-time">
+                  {item.time}
+                </span>
+
+                <div className="hour-icon">
+                  {item.icon}
+                </div>
 
                 <strong>{item.temp}</strong>
 
@@ -288,224 +400,357 @@ const Weather = () => {
                   <FaCloudRain />
                   {item.rain}
                 </span>
+
               </div>
+
             ))}
+
           </div>
+
         </section>
 
-        {/* WEEKLY */}
-        <section className="forecast-section">
+
+        {/* =========================================
+            7 DAY FORECAST
+            ========================================= */}
+
+        <section className="forecast-section weekly-section">
+
           <div className="section-heading">
+
             <div>
-              <span>7 DAY FORECAST</span>
-              <h2>Weekly Outlook</h2>
+              <span>EXTENDED FORECAST</span>
+
+              <h2>7-Day Farm Forecast</h2>
             </div>
 
             <p>
-              Plan your farming activities with the upcoming weather forecast.
+              Get a broader view of upcoming weather
+              before planning farm operations.
             </p>
+
           </div>
+
 
           <div className="weekly-forecast">
-            {weeklyData.map((item, index) => (
+
+            {weeklyForecast.map((day, index) => (
+
               <div
-                className={`day-card ${index === 0 ? "day-card-active" : ""}`}
-                key={index}
+                className={`day-card ${
+                  index === 0 ? "day-card-active" : ""
+                }`}
+                key={day.day}
               >
-                <span className="day-name">{item.day}</span>
 
-                <div className="day-icon">{item.icon}</div>
+                <span className="day-name">
+                  {day.day}
+                </span>
 
-                <span className="day-condition">{item.condition}</span>
-
-                <div className="day-temperature">
-                  <strong>{item.high}</strong>
-                  <span>{item.low}</span>
+                <div className="day-icon">
+                  {day.icon}
                 </div>
 
-                <span className="day-rain">
-                  <FaCloudRain />
-                  {item.rain}
+                <span className="day-condition">
+                  {day.condition}
                 </span>
+
+                <div className="day-temperature">
+                  <strong>{day.high}</strong>
+                  <span>{day.low}</span>
+                </div>
+
+                <div className="day-rain">
+                  <FaCloudRain />
+                  {day.rain}
+                </div>
+
               </div>
+
             ))}
+
           </div>
+
         </section>
 
-        {/* FARMING INTELLIGENCE */}
+
+        {/* =========================================
+            FARMING INTELLIGENCE
+            ========================================= */}
+
         <section className="farming-intelligence">
+
           <div className="section-heading centered-heading">
+
             <div>
-              <span>FARMING INTELLIGENCE</span>
-              <h2>Weather-Based Recommendations</h2>
+              <span>WEATHER → FARMING DECISIONS</span>
+
+              <h2>Farming Intelligence</h2>
             </div>
 
             <p>
-              Smart recommendations to help you manage your farm according to
-              current conditions.
+              Weather data translated into practical
+              recommendations for your farm.
             </p>
+
           </div>
 
+
           <div className="intelligence-grid">
-            <div className="intelligence-card">
+
+            {/* IRRIGATION */}
+
+            <div className="intelligence-card irrigation-card">
+
               <div className="intelligence-top">
+
                 <div className="intelligence-icon">
                   <FaTint />
                 </div>
 
-                <span className="recommendation-status good">RECOMMENDED</span>
+                <span className="recommendation-status moderate">
+                  MODERATE
+                </span>
+
               </div>
 
               <h3>Irrigation</h3>
 
               <p>
-                Soil moisture conditions are currently moderate. Normal
-                irrigation is recommended.
+                Rain is expected tomorrow. Consider reducing
+                today's irrigation to avoid unnecessary water use.
               </p>
 
               <div className="recommendation-footer">
-                <span>Recommendation</span>
-                <strong>Normal irrigation</strong>
+                <span>Water requirement</span>
+                <strong>Medium</strong>
               </div>
+
             </div>
 
-            <div className="intelligence-card">
+
+            {/* SPRAYING */}
+
+            <div className="intelligence-card spraying-card">
+
               <div className="intelligence-top">
+
                 <div className="intelligence-icon">
-                  <FaSeedling />
+                  <FaFlask />
                 </div>
 
-                <span className="recommendation-status good">GOOD</span>
+                <span className="recommendation-status avoid">
+                  NOT IDEAL
+                </span>
+
               </div>
 
-              <h3>Crop Monitoring</h3>
+              <h3>Spraying</h3>
 
               <p>
-                Weather conditions are suitable for regular crop inspection and
-                field monitoring.
+                High rainfall probability may reduce spray
+                effectiveness. Consider postponing application.
               </p>
 
               <div className="recommendation-footer">
-                <span>Recommendation</span>
-                <strong>Monitor crops</strong>
+                <span>Recommended time</span>
+                <strong>After rain</strong>
               </div>
+
             </div>
 
-            <div className="intelligence-card">
+
+            {/* FIELD WORK */}
+
+            <div className="intelligence-card field-card">
+
               <div className="intelligence-top">
+
                 <div className="intelligence-icon">
-                  <FaCalendarAlt />
+                  <FaTractor />
                 </div>
 
-                <span className="recommendation-status moderate">MODERATE</span>
+                <span className="recommendation-status good">
+                  GOOD
+                </span>
+
               </div>
 
-              <h3>Field Activities</h3>
+              <h3>Field Work</h3>
 
               <p>
-                Plan important field activities during the daytime when weather
-                remains stable.
+                Morning conditions are suitable for general
+                field activities and routine crop inspection.
               </p>
 
               <div className="recommendation-footer">
-                <span>Recommendation</span>
-                <strong>Suitable today</strong>
+                <span>Best time</span>
+                <strong>6 AM – 11 AM</strong>
               </div>
+
             </div>
+
           </div>
+
         </section>
 
-        {/* RISK */}
+
+        {/* =========================================
+            CROP WEATHER RISK
+            ========================================= */}
+
         <section className="risk-section">
-          <div className="section-heading centered-heading">
+
+          <div className="section-heading">
+
             <div>
-              <span>WEATHER RISK</span>
-              <h2>Farm Risk Overview</h2>
+              <span>FARM RISK MONITORING</span>
+
+              <h2>Crop Weather Risk</h2>
             </div>
+
+            <p>
+              A quick view of the weather factors that
+              may affect your crops.
+            </p>
+
           </div>
 
+
           <div className="risk-card">
+
             <div className="risk-row">
+
               <div className="risk-name">
-                <span>Rainfall Risk</span>
-                <strong>20%</strong>
+                <span>Heat Stress</span>
+                <strong>Low</strong>
+              </div>
+
+              <div className="risk-track">
+                <div
+                  className="risk-fill heat-risk"
+                  style={{ width: "35%" }}
+                ></div>
+              </div>
+
+            </div>
+
+
+            <div className="risk-row">
+
+              <div className="risk-name">
+                <span>Rain Risk</span>
+                <strong>Moderate</strong>
               </div>
 
               <div className="risk-track">
                 <div
                   className="risk-fill rain-risk"
-                  style={{ width: "20%" }}
+                  style={{ width: "68%" }}
                 ></div>
               </div>
+
             </div>
 
+
             <div className="risk-row">
+
               <div className="risk-name">
                 <span>Wind Risk</span>
-                <strong>25%</strong>
+                <strong>Low</strong>
               </div>
 
               <div className="risk-track">
                 <div
                   className="risk-fill wind-risk"
-                  style={{ width: "25%" }}
+                  style={{ width: "22%" }}
                 ></div>
               </div>
+
             </div>
 
+
             <div className="risk-row">
+
               <div className="risk-name">
                 <span>Humidity Risk</span>
-                <strong>35%</strong>
+                <strong>Moderate</strong>
               </div>
 
               <div className="risk-track">
                 <div
                   className="risk-fill humidity-risk"
-                  style={{ width: "35%" }}
+                  style={{ width: "58%" }}
                 ></div>
               </div>
+
             </div>
+
           </div>
+
         </section>
 
-        {/* AI CTA */}
+
+        {/* =========================================
+            AI CTA
+            ========================================= */}
+
         <section className="weather-ai-cta">
+
           <div className="weather-ai-icon">
             <FaRobot />
           </div>
 
           <div className="weather-ai-content">
-            <span>FARMVERSE AI</span>
 
-            <h2>Need help understanding today's weather?</h2>
+            <span>WEATHER + AI</span>
+
+            <h2>
+              Not sure what today's weather means for your farm?
+            </h2>
 
             <p>
-              Ask FarmVerse AI for personalized farming recommendations based on
-              weather conditions.
+              Ask FarmVerse AI about irrigation, spraying,
+              sowing, harvesting, crop protection, and more.
             </p>
+
           </div>
 
-          <button onClick={() => navigate("/ai-assistant")}>
-            Ask AI
+          <button
+            onClick={() => navigate("/ai-farming-assistant")}
+          >
+            Ask FarmVerse AI
             <FaArrowRight />
           </button>
+
         </section>
 
-        {/* FOOTER */}
+
+        {/* =========================================
+            FOOTER
+            ========================================= */}
+
         <footer className="weather-footer">
+
           <div className="weather-footer-brand">
             <FaLeaf />
-            <strong>FarmVerse</strong>
+            <span>FarmVerse</span>
           </div>
 
-          <p>Smart weather intelligence for smarter farming.</p>
+          <p>
+            Smart agriculture • Better decisions • Better harvests
+          </p>
 
-          <button onClick={() => navigate("/dashboard")}>Dashboard</button>
+          <button onClick={() => navigate("/")}>
+            Back to Home
+          </button>
+
         </footer>
+
       </main>
+
     </div>
   );
-};
+}
 
 export default Weather;
