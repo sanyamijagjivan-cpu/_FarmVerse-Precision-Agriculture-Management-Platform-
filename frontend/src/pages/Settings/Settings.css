@@ -973,3 +973,31 @@ html.dark-theme .settings-footer {
     flex: 1;
   }
 }
+
+.setting-row > svg {
+  margin-left: auto;
+  margin-right: 12px;
+  color: #5b9d6d;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+html.dark-theme .setting-row > svg {
+  color: #69d18a;
+}
+
+.setting-control {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.setting-control > svg {
+    color: #5b9d6d;
+    font-size: 15px;
+}
+
+html.dark-theme .setting-control > svg {
+    color: #69d18a;
+}

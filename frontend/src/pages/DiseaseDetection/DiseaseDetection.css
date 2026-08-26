@@ -1085,3 +1085,172 @@ text-align: center;
 
 }
 
+
+
+
+/* =========================================
+   DISEASE INPUT FIELDS
+   ========================================= */
+
+.disease-input-group {
+  margin-top: 16px;
+}
+
+.disease-input-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 11px;
+  font-weight: 750;
+  color: #52695a;
+}
+
+.disease-input-group input,
+.disease-input-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d8e8da;
+  border-radius: 11px;
+  padding: 12px 13px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #35533d;
+  background: #f9fcf9;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.disease-input-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.disease-input-group input:focus,
+.disease-input-group textarea:focus {
+  border-color: #75b981;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(76, 159, 89, 0.08);
+}
+
+.disease-input-group input::placeholder,
+.disease-input-group textarea::placeholder {
+  color: #a0aaa3;
+}
+
+
+/* =========================================
+   SCAN HISTORY
+   ========================================= */
+
+.scan-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scan-history-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #dcecdf;
+  box-shadow: 0 10px 30px rgba(45, 100, 55, 0.05);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.scan-history-card:hover {
+  transform: translateY(-3px);
+  border-color: #b9dbbe;
+  box-shadow: 0 14px 35px rgba(45, 100, 55, 0.08);
+}
+
+.scan-history-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  color: #4b9d58;
+  background: #edf7ef;
+  border: 1px solid #d5e9d8;
+}
+
+.scan-history-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.scan-history-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.scan-crop {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #579d61;
+}
+
+.scan-history-top h3 {
+  margin: 0;
+  font-size: 17px;
+  color: #315039;
+}
+
+.scan-confidence {
+  flex-shrink: 0;
+  padding: 6px 9px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 750;
+  color: #4b9d58;
+  background: #edf7ef;
+  border: 1px solid #d6e9d8;
+}
+
+.scan-history-main > p {
+  margin: 9px 0 7px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #78867c;
+}
+
+.scan-date {
+  font-size: 10px;
+  color: #9aa59d;
+}
+
+
+/* =========================================
+   MOBILE SCAN HISTORY
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .scan-history-card {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .scan-history-top {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .scan-confidence {
+    align-self: flex-start;
+  }
+
+}

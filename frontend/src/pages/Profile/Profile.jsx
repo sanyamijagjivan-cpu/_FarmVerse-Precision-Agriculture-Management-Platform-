@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -7,9 +8,9 @@ import {
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
-  FaSeedling,
-  FaRulerCombined,
-  FaTint,
+  FaUserTie,
+  FaLanguage,
+  FaBriefcase,
   FaEdit,
   FaSave,
   FaTimes,
@@ -18,56 +19,111 @@ import {
 
 import "./Profile.css";
 
+const API_URL = "http://localhost:8080/api/users/profile";
+
 const Profile = () => {
   const navigate = useNavigate();
 
   const [editing, setEditing] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [saving, setSaving] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const [saved, setSaved] = React.useState(false);
 
   const [profile, setProfile] = React.useState({
-    name: "Farmer",
-    email: "farmer@farmverse.com",
-    phone: "+91 98765 43210",
-    location: "Pune, Maharashtra",
-    farmArea: "2.5",
-    mainCrop: "Cotton",
-    irrigation: "Drip Irrigation",
+    id: null,
+    name: "",
+    email: "",
+    phone: "",
+    state: "",
+    district: "",
+    village: "",
+    farmerType: "",
+    farmingExperience: "",
+    preferredLanguage: "",
   });
 
   const [tempProfile, setTempProfile] = React.useState(profile);
 
-  const [saved, setSaved] = React.useState(false);
+  /* =====================================================
+     GET JWT TOKEN
+  ===================================================== */
 
-  /* ===============================
-     LOAD PROFILE
-  =============================== */
+  const getToken = () => {
+    return (
+      localStorage.getItem("token") ||
+      localStorage.getItem("jwtToken") ||
+      localStorage.getItem("accessToken")
+    );
+  };
+
+  /* =====================================================
+     LOAD LOGGED-IN USER PROFILE
+  ===================================================== */
 
   React.useEffect(() => {
-    const savedProfile = localStorage.getItem("farmverseProfile");
-
-    if (savedProfile) {
+    const loadProfile = async () => {
       try {
-        const parsed = JSON.parse(savedProfile);
+        setLoading(true);
+        setError("");
 
-        setProfile(parsed);
-        setTempProfile(parsed);
-      } catch (error) {
-        console.log("Profile loading error:", error);
+        const token = getToken();
+
+        if (!token) {
+          navigate("/login");
+          return;
+        }
+
+        const response = await fetch(API_URL, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("jwtToken");
+          localStorage.removeItem("accessToken");
+
+          navigate("/login");
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Unable to load profile");
+        }
+
+        const data = await response.json();
+
+        setProfile(data);
+        setTempProfile(data);
+      } catch (err) {
+        console.error("Profile loading error:", err);
+        setError("Unable to load your profile. Please try again.");
+      } finally {
+        setLoading(false);
       }
-    }
-  }, []);
+    };
 
-  /* ===============================
+    loadProfile();
+  }, [navigate]);
+
+  /* =====================================================
      EDIT
-  =============================== */
+  ===================================================== */
 
   const handleEdit = () => {
-    setTempProfile(profile);
+    setTempProfile({ ...profile });
+    setError("");
+    setSaved(false);
     setEditing(true);
   };
 
-  /* ===============================
+  /* =====================================================
      INPUT CHANGE
-  =============================== */
+  ===================================================== */
 
   const handleChange = (field, value) => {
     setTempProfile((previous) => ({
@@ -76,69 +132,152 @@ const Profile = () => {
     }));
   };
 
-  /* ===============================
-     SAVE
-  =============================== */
+  /* =====================================================
+     SAVE PROFILE
+  ===================================================== */
 
-  const handleSave = () => {
-    setProfile(tempProfile);
-
-    localStorage.setItem("farmverseProfile", JSON.stringify(tempProfile));
-
-    setEditing(false);
-    setSaved(true);
-
-    setTimeout(() => {
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      setError("");
       setSaved(false);
-    }, 2500);
+
+      const token = getToken();
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(API_URL, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: tempProfile.name,
+          phone: tempProfile.phone,
+          state: tempProfile.state,
+          district: tempProfile.district,
+          village: tempProfile.village,
+          farmerType: tempProfile.farmerType,
+          farmingExperience: tempProfile.farmingExperience,
+          preferredLanguage: tempProfile.preferredLanguage,
+        }),
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        navigate("/login");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Profile update failed");
+      }
+
+      const updatedProfile = await response.json();
+
+      setProfile(updatedProfile);
+      setTempProfile(updatedProfile);
+      setEditing(false);
+      setSaved(true);
+
+      setTimeout(() => {
+        setSaved(false);
+      }, 2500);
+    } catch (err) {
+      console.error("Profile update error:", err);
+      setError("Unable to update your profile. Please try again.");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  /* ===============================
+  /* =====================================================
      CANCEL
-  =============================== */
+  ===================================================== */
 
   const handleCancel = () => {
-    setTempProfile(profile);
+    setTempProfile({ ...profile });
+    setError("");
     setEditing(false);
   };
 
-  /* ===============================
+  /* =====================================================
      DASHBOARD
-  =============================== */
+  ===================================================== */
 
   const goToDashboard = () => {
     navigate("/dashboard");
   };
 
-  /* ===============================
+  /* =====================================================
      SETTINGS
-  =============================== */
+  ===================================================== */
 
   const goToSettings = () => {
     navigate("/settings");
   };
 
-  /* ===============================
+  /* =====================================================
      LOGOUT
-  =============================== */
+  ===================================================== */
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("farmverseUser");
 
     navigate("/login");
   };
 
+  /* =====================================================
+     LOADING
+  ===================================================== */
+
+  if (loading) {
+    return (
+      <div className="profile-page">
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "15px",
+            color: "#4b9962",
+          }}
+        >
+          Loading your profile...
+        </div>
+      </div>
+    );
+  }
+
+  /* =====================================================
+     PAGE
+  ===================================================== */
+
   return (
     <div className="profile-page">
+
       {/* ================= HEADER ================= */}
 
       <header className="profile-header">
+
         <div className="profile-header-left">
-          <button className="profile-back-btn" onClick={goToDashboard}>
+
+          <button
+            className="profile-back-btn"
+            onClick={goToDashboard}
+          >
             <FaArrowLeft />
           </button>
 
           <div className="profile-brand">
+
             <div className="profile-brand-icon">
               <FaLeaf />
             </div>
@@ -147,295 +286,556 @@ const Profile = () => {
               <strong>FarmVerse</strong>
               <span>My Profile</span>
             </div>
+
           </div>
+
         </div>
 
-        <button className="profile-settings-btn" onClick={goToSettings}>
+        <button
+          className="profile-settings-btn"
+          onClick={goToSettings}
+        >
           Settings
         </button>
+
       </header>
 
       {/* ================= MAIN ================= */}
 
       <main className="profile-container">
-        {/* PAGE TITLE */}
+
+        {/* TITLE */}
 
         <div className="profile-title">
+
           <span>ACCOUNT</span>
 
           <h1>My Profile</h1>
 
-          <p>Manage your personal information and farm details.</p>
+          <p>
+            Manage your personal information and account details.
+          </p>
+
         </div>
 
-        {/* SUCCESS MESSAGE */}
+        {/* ERROR */}
+
+        {error && (
+          <div
+            className="profile-success"
+            style={{
+              background: "#fff5f5",
+              borderColor: "#f0cccc",
+              color: "#c34848",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        {/* SUCCESS */}
 
         {saved && (
           <div className="profile-success">
+
             <FaSave />
+
             Profile updated successfully.
+
           </div>
         )}
 
         {/* ================= PROFILE CARD ================= */}
 
         <section className="profile-main-card">
+
           {/* TOP */}
 
           <div className="profile-card-top">
+
             <div className="profile-avatar">
               <FaUserCircle />
             </div>
 
             <div className="profile-user-info">
+
               {editing ? (
                 <input
                   className="profile-name-input"
-                  value={tempProfile.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
+                  value={tempProfile.name || ""}
+                  onChange={(e) =>
+                    handleChange("name", e.target.value)
+                  }
                   placeholder="Your name"
                 />
               ) : (
-                <h2>{profile.name}</h2>
+                <h2>
+                  {profile.name || "Your Name"}
+                </h2>
               )}
 
-              <span>Farm Owner · FarmVerse</span>
+              <span>
+                {profile.farmerType
+                  ? `${profile.farmerType} · FarmVerse`
+                  : "Farm Owner · FarmVerse"}
+              </span>
+
             </div>
 
             {!editing && (
-              <button className="profile-edit-btn" onClick={handleEdit}>
+              <button
+                className="profile-edit-btn"
+                onClick={handleEdit}
+              >
                 <FaEdit />
                 Edit Profile
               </button>
             )}
+
           </div>
 
           {/* ================= DETAILS ================= */}
 
           <div className="profile-details">
+
             {/* EMAIL */}
 
             <div className="profile-field">
+
               <div className="field-icon">
                 <FaEnvelope />
               </div>
 
               <div>
+
                 <span>Email Address</span>
 
-                {editing ? (
-                  <input
-                    type="email"
-                    value={tempProfile.email}
-                    onChange={(e) => handleChange("email", e.target.value)}
-                  />
-                ) : (
-                  <strong>{profile.email}</strong>
-                )}
+                <strong>
+                  {profile.email || "Not available"}
+                </strong>
+
               </div>
+
             </div>
 
             {/* PHONE */}
 
             <div className="profile-field">
+
               <div className="field-icon">
                 <FaPhone />
               </div>
 
               <div>
+
                 <span>Phone Number</span>
 
                 {editing ? (
                   <input
                     type="tel"
-                    value={tempProfile.phone}
-                    onChange={(e) => handleChange("phone", e.target.value)}
+                    value={tempProfile.phone || ""}
+                    onChange={(e) =>
+                      handleChange("phone", e.target.value)
+                    }
+                    placeholder="Enter phone number"
                   />
                 ) : (
-                  <strong>{profile.phone}</strong>
+                  <strong>
+                    {profile.phone || "Not added"}
+                  </strong>
                 )}
+
               </div>
+
             </div>
 
-            {/* LOCATION */}
+            {/* STATE */}
 
             <div className="profile-field">
+
               <div className="field-icon">
                 <FaMapMarkerAlt />
               </div>
 
               <div>
-                <span>Location</span>
+
+                <span>State</span>
 
                 {editing ? (
                   <input
                     type="text"
-                    value={tempProfile.location}
-                    onChange={(e) => handleChange("location", e.target.value)}
+                    value={tempProfile.state || ""}
+                    onChange={(e) =>
+                      handleChange("state", e.target.value)
+                    }
+                    placeholder="Enter state"
                   />
                 ) : (
-                  <strong>{profile.location}</strong>
+                  <strong>
+                    {profile.state || "Not added"}
+                  </strong>
                 )}
+
               </div>
+
             </div>
 
-            {/* FARM AREA */}
+            {/* DISTRICT */}
 
             <div className="profile-field">
+
               <div className="field-icon">
-                <FaRulerCombined />
+                <FaMapMarkerAlt />
               </div>
 
               <div>
-                <span>Farm Area</span>
+
+                <span>District</span>
 
                 {editing ? (
                   <input
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    value={tempProfile.farmArea}
-                    onChange={(e) => handleChange("farmArea", e.target.value)}
+                    type="text"
+                    value={tempProfile.district || ""}
+                    onChange={(e) =>
+                      handleChange("district", e.target.value)
+                    }
+                    placeholder="Enter district"
                   />
                 ) : (
-                  <strong>{profile.farmArea} Acres</strong>
+                  <strong>
+                    {profile.district || "Not added"}
+                  </strong>
                 )}
+
               </div>
+
             </div>
 
-            {/* MAIN CROP */}
+            {/* VILLAGE */}
 
             <div className="profile-field">
+
               <div className="field-icon">
-                <FaSeedling />
+                <FaMapMarkerAlt />
               </div>
 
               <div>
-                <span>Main Crop</span>
+
+                <span>Village / Town</span>
 
                 {editing ? (
-                  <select
-                    value={tempProfile.mainCrop}
-                    onChange={(e) => handleChange("mainCrop", e.target.value)}
-                  >
-                    <option>Cotton</option>
-                    <option>Wheat</option>
-                    <option>Rice</option>
-                    <option>Sugarcane</option>
-                    <option>Soybean</option>
-                    <option>Maize</option>
-                  </select>
+                  <input
+                    type="text"
+                    value={tempProfile.village || ""}
+                    onChange={(e) =>
+                      handleChange("village", e.target.value)
+                    }
+                    placeholder="Enter village or town"
+                  />
                 ) : (
-                  <strong>{profile.mainCrop}</strong>
+                  <strong>
+                    {profile.village || "Not added"}
+                  </strong>
                 )}
+
               </div>
+
             </div>
 
-            {/* IRRIGATION */}
+            {/* FARMER TYPE */}
 
             <div className="profile-field">
+
               <div className="field-icon">
-                <FaTint />
+                <FaUserTie />
               </div>
 
               <div>
-                <span>Irrigation</span>
+
+                <span>Farmer Type</span>
 
                 {editing ? (
                   <select
-                    value={tempProfile.irrigation}
-                    onChange={(e) => handleChange("irrigation", e.target.value)}
+                    value={tempProfile.farmerType || ""}
+                    onChange={(e) =>
+                      handleChange("farmerType", e.target.value)
+                    }
                   >
-                    <option>Drip Irrigation</option>
+                    <option value="">
+                      Select farmer type
+                    </option>
 
-                    <option>Sprinkler Irrigation</option>
+                    <option value="Farm Owner">
+                      Farm Owner
+                    </option>
 
-                    <option>Flood Irrigation</option>
+                    <option value="Tenant Farmer">
+                      Tenant Farmer
+                    </option>
 
-                    <option>Rainfed</option>
+                    <option value="Agricultural Worker">
+                      Agricultural Worker
+                    </option>
+
+                    <option value="Farmer Producer">
+                      Farmer Producer
+                    </option>
                   </select>
                 ) : (
-                  <strong>{profile.irrigation}</strong>
+                  <strong>
+                    {profile.farmerType || "Not added"}
+                  </strong>
                 )}
+
               </div>
+
             </div>
+
+            {/* EXPERIENCE */}
+
+            <div className="profile-field">
+
+              <div className="field-icon">
+                <FaBriefcase />
+              </div>
+
+              <div>
+
+                <span>Farming Experience</span>
+
+                {editing ? (
+                  <select
+                    value={tempProfile.farmingExperience || ""}
+                    onChange={(e) =>
+                      handleChange(
+                        "farmingExperience",
+                        e.target.value
+                      )
+                    }
+                  >
+                    <option value="">
+                      Select experience
+                    </option>
+
+                    <option value="Less than 1 year">
+                      Less than 1 year
+                    </option>
+
+                    <option value="1 - 5 years">
+                      1 - 5 years
+                    </option>
+
+                    <option value="5 - 10 years">
+                      5 - 10 years
+                    </option>
+
+                    <option value="10 - 20 years">
+                      10 - 20 years
+                    </option>
+
+                    <option value="More than 20 years">
+                      More than 20 years
+                    </option>
+                  </select>
+                ) : (
+                  <strong>
+                    {profile.farmingExperience || "Not added"}
+                  </strong>
+                )}
+
+              </div>
+
+            </div>
+
+            {/* LANGUAGE */}
+
+            <div className="profile-field">
+
+              <div className="field-icon">
+                <FaLanguage />
+              </div>
+
+              <div>
+
+                <span>Preferred Language</span>
+
+                {editing ? (
+                  <select
+                    value={tempProfile.preferredLanguage || ""}
+                    onChange={(e) =>
+                      handleChange(
+                        "preferredLanguage",
+                        e.target.value
+                      )
+                    }
+                  >
+                    <option value="">
+                      Select language
+                    </option>
+
+                    <option value="Tamil">
+                      Tamil
+                    </option>
+
+                    <option value="English">
+                      English
+                    </option>
+
+                    <option value="Hindi">
+                      Hindi
+                    </option>
+
+                    <option value="Malayalam">
+                      Malayalam
+                    </option>
+
+                    <option value="Telugu">
+                      Telugu
+                    </option>
+
+                    <option value="Kannada">
+                      Kannada
+                    </option>
+                  </select>
+                ) : (
+                  <strong>
+                    {profile.preferredLanguage || "Not added"}
+                  </strong>
+                )}
+
+              </div>
+
+            </div>
+
           </div>
 
-          {/* ================= ACTIONS ================= */}
+          {/* ACTIONS */}
 
           {editing && (
             <div className="profile-actions">
-              <button className="cancel-profile-btn" onClick={handleCancel}>
+
+              <button
+                className="cancel-profile-btn"
+                onClick={handleCancel}
+                disabled={saving}
+              >
                 <FaTimes />
                 Cancel
               </button>
 
-              <button className="save-profile-btn" onClick={handleSave}>
+              <button
+                className="save-profile-btn"
+                onClick={handleSave}
+                disabled={saving}
+              >
                 <FaSave />
-                Save Changes
+
+                {saving ? "Saving..." : "Save Changes"}
               </button>
+
             </div>
           )}
+
         </section>
 
-        {/* ================= FARM SUMMARY ================= */}
+        {/* ================= PROFILE SUMMARY ================= */}
 
         <section className="profile-summary">
+
           <div className="summary-item">
+
             <div className="summary-icon green">
-              <FaSeedling />
+              <FaMapMarkerAlt />
             </div>
 
             <div>
-              <span>Main Crop</span>
-              <strong>{profile.mainCrop}</strong>
+
+              <span>Location</span>
+
+              <strong>
+                {profile.district
+                  ? `${profile.district}${
+                      profile.state
+                        ? `, ${profile.state}`
+                        : ""
+                    }`
+                  : "Not added"}
+              </strong>
+
             </div>
+
           </div>
 
           <div className="summary-item">
+
             <div className="summary-icon blue">
-              <FaRulerCombined />
+              <FaBriefcase />
             </div>
 
             <div>
-              <span>Total Area</span>
-              <strong>{profile.farmArea} Acres</strong>
+
+              <span>Experience</span>
+
+              <strong>
+                {profile.farmingExperience || "Not added"}
+              </strong>
+
             </div>
+
           </div>
 
           <div className="summary-item">
+
             <div className="summary-icon water">
-              <FaTint />
+              <FaLanguage />
             </div>
 
             <div>
-              <span>Irrigation</span>
-              <strong>{profile.irrigation}</strong>
+
+              <span>Language</span>
+
+              <strong>
+                {profile.preferredLanguage || "Not added"}
+              </strong>
+
             </div>
+
           </div>
+
         </section>
 
-        {/* ================= ACCOUNT ACTIONS ================= */}
+        {/* ================= ACCOUNT ================= */}
 
         <section className="account-actions-card">
+
           <div>
+
             <h3>Account</h3>
 
-            <p>Manage your FarmVerse account.</p>
+            <p>
+              Manage your FarmVerse account.
+            </p>
+
           </div>
 
-          <button className="logout-btn" onClick={handleLogout}>
+          <button
+            className="logout-btn"
+            onClick={handleLogout}
+          >
             <FaSignOutAlt />
             Logout
           </button>
+
         </section>
 
-        {/* ================= FOOTER ================= */}
+        {/* FOOTER */}
 
         <footer className="profile-footer">
           © 2026 FarmVerse · Smart Farming Powered by AI
         </footer>
+
       </main>
+
     </div>
   );
 };

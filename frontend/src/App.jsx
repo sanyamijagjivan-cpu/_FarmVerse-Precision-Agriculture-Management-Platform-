@@ -18,6 +18,8 @@ import DiseaseDetection from "./pages/DiseaseDetection/DiseaseDetection";
 import MarketAnalysis from "./pages/MarketAnalysis/MarketAnalysis";
 import Weather from "./pages/Weather/Weather";
 
+import CropManagement from "./pages/CropManagement";
+
 function App() {
   return (
     <BrowserRouter>
@@ -51,6 +53,14 @@ function App() {
         />
         <Route path="/weather" element={<Weather />} />
         <Route path="/market-analysis" element={<MarketAnalysis />} />
+
+
+        <Route
+  path="/crop-management"
+  element={<CropManagement />}
+/>
+
+
       </Routes>
     </BrowserRouter>
   );

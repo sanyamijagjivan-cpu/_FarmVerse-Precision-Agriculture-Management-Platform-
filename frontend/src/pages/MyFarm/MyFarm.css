@@ -1,794 +1,1855 @@
+
+/* =========================================================
+   FARMVERSE - MY FARM
+   Modern Precision Agriculture UI
+   ========================================================= */
+
 .myfarm-page {
   min-height: 100vh;
-  background: #f5f8f6;
-  color: #25352c;
-  font-family: "Poppins", sans-serif;
+  background: #f5f7f4;
+  color: #18251b;
+  font-family:
+    Inter,
+    "Segoe UI",
+    Arial,
+    sans-serif;
 }
 
-.myfarm-header {
-  height: 72px;
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.myfarm-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 78px;
   padding: 0 5%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
-  border-bottom: 1px solid #e2e9e4;
-  position: sticky;
-  top: 0;
-  z-index: 20;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #e4e9e3;
+  backdrop-filter: blur(12px);
 }
 
-.myfarm-header-left {
+.topbar-brand {
   display: flex;
   align-items: center;
   gap: 13px;
 }
 
-.myfarm-back {
-  width: 38px;
-  height: 38px;
-  border: 1px solid #dfe7e1;
-  border-radius: 9px;
+.back-button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #dce3db;
+  border-radius: 10px;
   background: #fff;
-  color: #66736b;
+  color: #415144;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s ease;
 }
 
-.myfarm-back:hover {
-  color: #16803c;
-  background: #eef8f1;
+.back-button:hover {
+  background: #eef5ec;
+  color: #2f7d32;
+  border-color: #b8d5b7;
 }
 
-.myfarm-header span,
-.section-title > div > span,
-.farm-hero-info > span,
-.farm-type span,
-.crop-main > span {
-  color: #4a9661;
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.myfarm-header h1 {
-  margin: 3px 0 0;
-  font-size: 18px;
-}
-
-.edit-farm-btn,
-.small-action {
-  border: none;
-  border-radius: 8px;
-  background: #16803c;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.edit-farm-btn {
-  padding: 9px 13px;
-}
-
-.small-action {
-  padding: 8px 11px;
-}
-
-.edit-farm-btn:hover,
-.small-action:hover,
-.save-btn:hover {
-  background: #126d32;
-}
-
-.myfarm-container {
-  width: min(1080px, 92%);
-  margin: auto;
-  padding: 30px 0 55px;
-}
-
-.section-block,
-.crop-section,
-.health-section,
-.resources-section,
-.actions-section,
-.activity-section,
-.history-section {
-  margin-bottom: 18px;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 13px;
-}
-
-.section-title h2 {
-  margin: 4px 0 0;
-  font-size: 16px;
-  color: #25352c;
-}
-
-.section-icon {
-  color: #16803c;
-}
-
-/* HERO */
-
-.farm-hero {
-  min-height: 125px;
-  padding: 22px;
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: linear-gradient(135deg, #eaf7ee, #f8fcf9);
-  border: 1px solid #dceadf;
-  border-radius: 15px;
-}
-
-.farm-hero-icon {
-  width: 62px;
-  height: 62px;
-  min-width: 62px;
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #e5f3e2;
+  color: #3d873d;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 14px;
-  background: #d9f0df;
-  color: #16803c;
-  font-size: 26px;
+  font-size: 21px;
 }
 
-.farm-hero-info {
-  flex: 1;
-}
-
-.farm-hero-info h2 {
-  margin: 5px 0;
-  font-size: 23px;
-}
-
-.farm-hero-info p {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: #718078;
-  font-size: 9px;
-}
-
-.farm-type {
-  min-width: 125px;
-  padding: 12px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid #dceadf;
-}
-
-.farm-type strong {
+.brand-name {
   display: block;
-  margin-top: 5px;
-  font-size: 10px;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
 }
 
-/* STATS */
-
-.farm-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 11px;
-}
-
-.farm-stat-card {
-  padding: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #fff;
-  border: 1px solid #e1e9e3;
-  border-radius: 11px;
-}
-
-.stat-icon,
-.resource-icon {
-  width: 35px;
-  height: 35px;
-  min-width: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9px;
-  background: #edf8f0;
-  color: #16803c;
-  font-size: 13px;
-}
-
-.farm-stat-card span,
-.detail-item span,
-.resource-card span,
-.crop-info span {
+.brand-subtitle {
   display: block;
-  color: #89948e;
-  font-size: 8px;
+  margin-top: 2px;
+  font-size: 11px;
+  color: #7b897c;
 }
 
-.farm-stat-card strong,
-.resource-card strong {
-  display: block;
-  margin-top: 4px;
-  color: #35443b;
-  font-size: 10px;
-}
-
-/* DETAILS */
-
-.farm-details-card,
-.health-section,
-.resources-section,
-.actions-section,
-.activity-section,
-.history-section {
-  padding: 20px;
-  background: #fff;
-  border: 1px solid #e1e9e3;
-  border-radius: 14px;
-}
-
-.details-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.detail-item {
-  padding: 12px;
-  border: 1px solid #edf1ee;
-  border-radius: 9px;
-  background: #fbfdfb;
-}
-
-.detail-item strong {
-  display: block;
-  margin-top: 5px;
-  color: #35443b;
-  font-size: 10px;
-}
-
-/* FORM */
-
-.farm-form {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 13px;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-field label {
-  color: #59675f;
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.form-field input,
-.form-field select {
-  width: 100%;
-  height: 38px;
-  padding: 0 10px;
-  border: 1px solid #dfe7e1;
-  border-radius: 8px;
-  outline: none;
-  background: #fbfdfb;
-  color: #35443b;
-  font-family: inherit;
-  font-size: 9px;
-}
-
-.form-field input:focus,
-.form-field select:focus {
-  border-color: #6cae7b;
-  background: #fff;
-}
-
-.form-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.cancel-btn,
-.save-btn {
-  padding: 9px 13px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.cancel-btn {
-  border: 1px solid #dfe7e1;
-  background: #fff;
-  color: #68746d;
-}
-
-.save-btn {
-  border: none;
-  background: #16803c;
-  color: #fff;
-}
-
-/* CROP */
-
-.crop-card {
-  padding: 17px;
+.topbar-actions {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #fff;
-  border: 1px solid #e1e9e3;
-  border-radius: 11px;
 }
 
-.crop-icon {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
+.farm-status-pill {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border-radius: 20px;
+  background: #edf7eb;
+  color: #3d783d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #51a951;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.myfarm-content {
+  width: min(1400px, 90%);
+  margin: 0 auto;
+  padding: 48px 0 80px;
+}
+
+.page-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 36px;
+}
+
+.eyebrow {
+  display: block;
+  color: #5c8060;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.page-heading h1 {
+  margin: 8px 0 8px;
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+}
+
+.page-heading p {
+  max-width: 650px;
+  margin: 0;
+  color: #6e7b70;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.heading-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border: 1px solid #dfe6de;
+  border-radius: 12px;
+  background: #fff;
+  color: #536357;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.primary-button,
+.secondary-button,
+.outline-button,
+.danger-outline-button,
+.danger-button {
+  min-height: 42px;
+  border-radius: 10px;
+  padding: 0 16px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 11px;
-  background: #e8f6ec;
-  color: #16803c;
-  font-size: 19px;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
-.crop-main {
-  flex: 1;
+.primary-button {
+  border: 1px solid #3f8b43;
+  background: #3f8b43;
+  color: #fff;
 }
 
-.crop-main h2 {
-  margin: 4px 0;
-  font-size: 17px;
+.primary-button:hover {
+  background: #327537;
+  border-color: #327537;
+  transform: translateY(-1px);
 }
 
-.crop-main p {
-  margin: 0;
+.primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.secondary-button {
+  border: 1px solid #d7dfd6;
+  background: #fff;
+  color: #536157;
+}
+
+.secondary-button:hover {
+  background: #f4f7f3;
+}
+
+.outline-button {
+  border: 1px solid #cdd9cb;
+  background: #fff;
+  color: #437448;
+}
+
+.outline-button:hover {
+  background: #edf6eb;
+}
+
+.danger-outline-button {
+  border: 1px solid #e4c8c8;
+  background: #fff;
+  color: #b34b4b;
+}
+
+.danger-outline-button:hover {
+  background: #fff1f1;
+}
+
+.danger-button {
+  border: 1px solid #d85656;
+  background: #fff;
+  color: #c44747;
+}
+
+.danger-button:hover {
+  background: #c44747;
+  color: #fff;
+}
+
+.primary-button.large {
+  min-height: 50px;
+  padding: 0 24px;
+  font-size: 14px;
+}
+
+/* =========================================================
+   FARM SELECTOR
+   ========================================================= */
+
+.farm-selector {
+  padding: 26px;
+  margin-bottom: 28px;
+  border: 1px solid #e0e6de;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.section-heading {
+  margin-bottom: 22px;
   display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.section-heading.compact {
   align-items: center;
-  gap: 5px;
-  color: #89948e;
-  font-size: 8px;
 }
 
-.crop-info {
-  min-width: 130px;
-  padding-left: 15px;
-  border-left: 1px solid #edf1ee;
+.section-heading h2 {
+  margin: 6px 0 0;
+  font-size: 25px;
+  letter-spacing: -0.5px;
 }
 
-.crop-info strong {
-  display: block;
-  margin-top: 5px;
-  font-size: 9px;
-  color: #35443b;
+.section-heading p {
+  margin: 8px 0 0;
+  color: #778178;
+  font-size: 14px;
 }
 
-.growth-box {
-  padding: 14px;
-  margin-top: 10px;
-  background: #fbfdfb;
-  border: 1px solid #edf1ee;
-  border-radius: 10px;
-}
-
-.growth-heading {
-  display: flex;
-  justify-content: space-between;
-  color: #68746d;
-  font-size: 8px;
-  margin-bottom: 6px;
-}
-
-.growth-heading strong {
-  color: #16803c;
-}
-
-.growth-bar,
-.health-progress {
-  height: 6px;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #e7eee9;
-}
-
-.growth-bar div,
-.health-progress div {
-  height: 100%;
-  border-radius: inherit;
-  background: #16803c;
-}
-
-.growth-stages {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-}
-
-.growth-stages span {
-  color: #a0aaa4;
-  font-size: 7px;
-}
-
-.growth-stages .active {
-  color: #16803c;
+.farm-count {
+  color: #778178;
+  font-size: 13px;
   font-weight: 600;
 }
 
-/* HEALTH */
-
-.health-grid {
+.farm-selector-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr;
-  gap: 11px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 13px;
 }
 
-.health-score-card {
+.farm-selector-card {
+  min-width: 0;
   padding: 15px;
   display: flex;
   align-items: center;
   gap: 13px;
-  border: 1px solid #edf1ee;
-  border-radius: 10px;
-  background: #fbfdfb;
-}
-
-.score-circle {
-  width: 65px;
-  height: 65px;
-  min-width: 65px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #e6f5ea;
-  border: 5px solid #8cc89a;
-}
-
-.score-circle div {
-  text-align: center;
-}
-
-.score-circle strong {
-  font-size: 18px;
-  color: #16803c;
-}
-
-.score-circle span {
-  font-size: 7px;
-  color: #718078;
-}
-
-.health-score-card h3 {
-  margin: 0;
-  font-size: 11px;
-}
-
-.health-score-card p {
-  margin: 4px 0 0;
-  color: #89948e;
-  font-size: 8px;
-}
-
-.health-item {
-  padding: 13px;
-  border: 1px solid #edf1ee;
-  border-radius: 10px;
-  background: #fbfdfb;
-}
-
-.health-item > div:first-child {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 9px;
-}
-
-.health-item span {
-  color: #718078;
-  font-size: 8px;
-}
-
-.health-item strong {
-  color: #16803c;
-  font-size: 9px;
-}
-
-/* RESOURCES */
-
-.resource-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 11px;
-}
-
-.resource-card {
-  padding: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid #edf1ee;
-  border-radius: 10px;
-  background: #fbfdfb;
-}
-
-/* ACTIONS */
-
-.action-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 11px;
-}
-
-.action-card {
-  padding: 13px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  border: 1px solid #e0e7df;
+  border-radius: 14px;
+  background: #fbfcfa;
+  color: #1d2b20;
   text-align: left;
-  border: 1px solid #e1e9e3;
-  border-radius: 10px;
-  background: #fbfdfb;
-  color: #16803c;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
-.action-card:hover {
-  border-color: #9ccaa7;
-  background: #f3faf5;
+.farm-selector-card:hover,
+.farm-selector-card.active {
+  border-color: #73ad72;
+  background: #f0f8ee;
 }
 
-.action-card > svg {
-  font-size: 16px;
+.farm-selector-card > svg {
+  margin-left: auto;
+  color: #a0aaa0;
+  font-size: 12px;
 }
 
-.action-card strong,
-.action-card span {
-  display: block;
-}
-
-.action-card strong {
-  color: #35443b;
-  font-size: 9px;
-}
-
-.action-card span {
-  margin-top: 3px;
-  color: #89948e;
-  font-size: 7px;
-}
-
-/* ACTIVITIES */
-
-.activity-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.activity-item {
-  padding: 13px 0;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  border-bottom: 1px solid #edf1ee;
-}
-
-.activity-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.activity-icon {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
+.farm-selector-icon {
+  flex: 0 0 auto;
+  width: 43px;
+  height: 43px;
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  background: #edf8f0;
-  color: #16803c;
+  background: #e4f2e0;
+  color: #448746;
 }
 
-.activity-icon.completed {
-  background: #e3f5e7;
-}
-
-.activity-content {
-  flex: 1;
-}
-
-.activity-content strong {
+.farm-selector-info strong {
   display: block;
-  color: #35443b;
-  font-size: 9px;
+  font-size: 14px;
+  margin-bottom: 5px;
 }
 
-.activity-content span {
-  display: block;
-  margin-top: 3px;
-  color: #89948e;
-  font-size: 8px;
-}
-
-.activity-time {
+.farm-selector-info span {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #9aa39e;
-  font-size: 7px;
+  color: #788278;
+  font-size: 12px;
 }
 
-/* HISTORY */
+/* =========================================================
+   FORM CARD
+   ========================================================= */
 
-.history-table-wrapper {
-  overflow-x: auto;
+.modern-form-card,
+.inline-form-card,
+.soil-form-card {
+  margin-bottom: 30px;
+  padding: 28px;
+  border: 1px solid #dfe6dd;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(42, 66, 44, 0.05);
 }
 
-.history-table {
+.form-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.form-card-header h2 {
+  margin: 6px 0 6px;
+  font-size: 24px;
+}
+
+.form-card-header p {
+  margin: 0;
+  color: #7b857c;
+  font-size: 14px;
+}
+
+.form-header-icon,
+.soil-form-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf6ea;
+  color: #4c8c4e;
+  font-size: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.input-group {
+  min-width: 0;
+}
+
+.input-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #3f4e42;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
   width: 100%;
-  border-collapse: collapse;
+  min-height: 46px;
+  box-sizing: border-box;
+  padding: 0 13px;
+  border: 1px solid #d9e1d8;
+  border-radius: 10px;
+  outline: none;
+  background: #fbfcfb;
+  color: #253127;
+  font-family: inherit;
+  font-size: 14px;
+  transition: 0.2s ease;
 }
 
-.history-table th {
-  padding: 10px;
-  text-align: left;
-  background: #f7faf8;
-  color: #718078;
-  font-size: 8px;
+.input-group textarea {
+  padding: 13px;
+  resize: vertical;
+  min-height: 110px;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+  border-color: #70a96f;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(88, 145, 87, 0.1);
+}
+
+.input-with-unit {
+  position: relative;
+}
+
+.input-with-unit input {
+  padding-right: 78px;
+}
+
+.input-with-unit span {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #89928a;
+  font-size: 12px;
   font-weight: 600;
+  pointer-events: none;
 }
 
-.history-table td {
-  padding: 11px 10px;
-  border-bottom: 1px solid #edf1ee;
-  color: #536159;
-  font-size: 8px;
+.form-footer {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid #edf0eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-.status-good {
-  padding: 4px 7px;
+/* =========================================================
+   FARM HERO
+   ========================================================= */
+
+.farm-hero {
+  min-height: 190px;
+  margin-bottom: 18px;
+  padding: 30px 34px;
   border-radius: 20px;
-  background: #e7f6eb;
-  color: #16803c;
-  font-size: 7px;
+  background:
+    linear-gradient(
+      135deg,
+      #1e4e2a 0%,
+      #31723d 55%,
+      #44864a 100%
+    );
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  box-shadow: 0 14px 35px rgba(44, 91, 49, 0.2);
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.hero-icon {
+  width: 72px;
+  height: 72px;
+  flex: 0 0 auto;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 32px;
+}
+
+.hero-info > span {
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  font-weight: 800;
+  opacity: 0.72;
+}
+
+.hero-info h2 {
+  margin: 6px 0 7px;
+  font-size: 31px;
+  letter-spacing: -0.7px;
+}
+
+.hero-info p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 1px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.09);
+}
+
+.hero-meta > div {
+  min-width: 110px;
+  padding: 17px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hero-meta span {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  opacity: 0.68;
+  font-weight: 800;
+}
+
+.hero-meta strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 20px;
+}
+
+.hero-meta small {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+  opacity: 0.65;
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.farm-navigation {
+  position: sticky;
+  top: 78px;
+  z-index: 50;
+  margin-bottom: 42px;
+  padding: 8px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  border: 1px solid #e0e7df;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.farm-navigation button {
+  padding: 9px 15px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #68736a;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.farm-navigation button:hover,
+.farm-navigation button.active {
+  background: #eaf4e7;
+  color: #3d7b40;
+}
+
+/* =========================================================
+   OVERVIEW
+   ========================================================= */
+
+.overview-section,
+.management-section,
+.resources-section,
+.quick-actions,
+.activity-section,
+.history-section {
+  margin-bottom: 52px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.overview-stat {
+  min-width: 0;
+  padding: 21px;
+  border: 1px solid #e0e6df;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(39, 58, 41, 0.035);
+}
+
+.stat-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-top > span {
+  color: #7c857e;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.stat-icon {
+  width: 39px;
+  height: 39px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.stat-icon.green,
+.resource-modern-icon.green {
+  background: #e6f4e2;
+  color: #4b934c;
+}
+
+.stat-icon.leaf {
+  background: #e9f4e9;
+  color: #4d9251;
+}
+
+.stat-icon.blue,
+.resource-modern-icon.blue {
+  background: #e4f1f8;
+  color: #4787a8;
+}
+
+.stat-icon.orange,
+.resource-modern-icon.orange {
+  background: #fbf0df;
+  color: #b87b35;
+}
+
+.overview-stat > strong {
+  display: block;
+  margin-top: 19px;
+  color: #1e2c21;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.overview-stat > strong small {
+  font-size: 13px;
+  color: #7d887e;
   font-weight: 600;
 }
 
-/* RESPONSIVE */
+.overview-stat .status-text {
+  font-size: 21px;
+}
 
-@media (max-width: 950px) {
-  .farm-stats,
-  .resource-grid,
-  .action-grid {
+.overview-stat p {
+  margin: 6px 0 0;
+  color: #899189;
+  font-size: 12px;
+}
+
+/* =========================================================
+   MANAGEMENT
+   ========================================================= */
+
+.management-section {
+  scroll-margin-top: 140px;
+}
+
+.inline-form-card {
+  background: #fdfefd;
+}
+
+.inline-form-title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 24px;
+}
+
+.inline-form-title > svg {
+  width: 43px;
+  height: 43px;
+  padding: 11px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background: #e9f5e5;
+  color: #4b8d4e;
+}
+
+.inline-form-title span {
+  color: #6f8070;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.inline-form-title h3 {
+  margin: 4px 0 0;
+  font-size: 20px;
+}
+
+/* =========================================================
+   CROP CARDS
+   ========================================================= */
+
+.modern-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.crop-modern-card {
+  overflow: hidden;
+  border: 1px solid #dfe6de;
+  border-radius: 17px;
+  background: #fff;
+  transition: 0.25s ease;
+}
+
+.crop-modern-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(41, 66, 43, 0.08);
+}
+
+.crop-card-top {
+  position: relative;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(
+      135deg,
+      #e7f3e2,
+      #f4f8f1
+    );
+}
+
+.crop-image-placeholder {
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #579452;
+  font-size: 28px;
+  box-shadow: 0 6px 18px rgba(56, 89, 54, 0.08);
+}
+
+.crop-type {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 9px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #55705a;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.crop-card-body {
+  padding: 20px;
+}
+
+.crop-card-body h3 {
+  margin: 0 0 17px;
+  font-size: 20px;
+}
+
+.crop-info-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  align-items: center;
+  gap: 7px;
+  margin-top: 11px;
+  color: #7c877e;
+  font-size: 11px;
+}
+
+.crop-info-row svg {
+  color: #579557;
+}
+
+.crop-info-row strong {
+  color: #39463c;
+  font-size: 11px;
+}
+
+.card-actions {
+  padding: 14px 20px 18px;
+  border-top: 1px solid #eef1ed;
+  display: flex;
+  gap: 8px;
+}
+
+.card-actions button {
+  min-height: 36px;
+  flex: 1;
+  padding: 0 10px;
+  font-size: 11px;
+}
+
+/* =========================================================
+   SOIL HEALTH
+   ========================================================= */
+
+.soil-section {
+  scroll-margin-top: 140px;
+  margin-bottom: 52px;
+  padding: 30px;
+  border-radius: 21px;
+  background: #eef4eb;
+  border: 1px solid #dce7d9;
+}
+
+.soil-summary {
+  margin-bottom: 17px;
+  padding: 23px;
+  border: 1px solid #dce5d9;
+  border-radius: 17px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.soil-health-main {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.soil-health-icon {
+  width: 53px;
+  height: 53px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8ead4;
+  color: #b77d36;
+  font-size: 22px;
+}
+
+.soil-health-main span,
+.soil-summary-value span {
+  color: #7b867c;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.soil-health-main h3 {
+  margin: 4px 0;
+  color: #3e7741;
+  font-size: 22px;
+}
+
+.soil-health-main p {
+  margin: 0;
+  color: #8a938b;
+  font-size: 12px;
+}
+
+.soil-summary-value {
+  min-width: 110px;
+  padding-left: 25px;
+  border-left: 1px solid #e4e9e2;
+}
+
+.soil-summary-value strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 30px;
+}
+
+.soil-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.soil-metric {
+  padding: 17px;
+  border: 1px solid #dfe7dd;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.metric-icon {
+  width: 35px;
+  height: 35px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.metric-icon.nitrogen {
+  background: #e6f1e6;
+  color: #4f8d51;
+}
+
+.metric-icon.phosphorus {
+  background: #eee9f6;
+  color: #7660a2;
+}
+
+.metric-icon.potassium {
+  background: #edf2df;
+  color: #708741;
+}
+
+.metric-icon.organic {
+  background: #f5e9dd;
+  color: #a86e39;
+}
+
+.metric-icon.moisture {
+  background: #e3f1f8;
+  color: #4e8aa8;
+}
+
+.metric-icon.ph {
+  background: #f8e9df;
+  color: #a9683e;
+}
+
+.soil-metric span {
+  display: block;
+  color: #778179;
+  font-size: 11px;
+}
+
+.soil-metric strong {
+  display: inline-block;
+  margin-top: 6px;
+  color: #263329;
+  font-size: 21px;
+}
+
+.soil-metric small {
+  margin-left: 3px;
+  color: #9aa29b;
+  font-size: 10px;
+}
+
+.soil-form-card {
+  margin-top: 18px;
+}
+
+.soil-form-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.soil-history {
+  margin-top: 25px;
+}
+
+.subsection-heading {
+  margin-bottom: 13px;
+}
+
+.subsection-heading h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.subsection-heading p {
+  margin: 5px 0 0;
+  color: #7c867e;
+  font-size: 12px;
+}
+
+.soil-record-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.soil-record {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 17px;
+  border: 1px solid #dfe6dd;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.soil-record-icon {
+  width: 43px;
+  height: 43px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5eadc;
+  color: #ad763c;
+}
+
+.soil-record-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.soil-record-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.soil-record-title span {
+  color: #6f806f;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.soil-record-title h3 {
+  margin: 3px 0 0;
+  font-size: 15px;
+}
+
+.soil-record-title > strong {
+  color: #89918a;
+  font-size: 11px;
+}
+
+.soil-record-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: 12px;
+}
+
+.soil-record-values span {
+  color: #808981;
+  font-size: 11px;
+}
+
+.soil-record-values strong {
+  margin-left: 4px;
+  color: #334037;
+}
+
+.record-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.icon-button {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border: 1px solid #dce4da;
+  border-radius: 9px;
+  background: #fff;
+  color: #537254;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.icon-button:hover {
+  background: #edf5eb;
+}
+
+.icon-button.danger {
+  color: #b24b4b;
+  border-color: #ead1d1;
+}
+
+.icon-button.danger:hover {
+  background: #fff0f0;
+}
+
+/* =========================================================
+   IRRIGATION
+   ========================================================= */
+
+.irrigation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.irrigation-card {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  padding: 20px;
+  border: 1px solid #dfe6df;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.irrigation-icon {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e4f2f8;
+  color: #4d8daa;
+  font-size: 20px;
+}
+
+.irrigation-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.irrigation-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.irrigation-title span:first-child {
+  color: #7c877f;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.irrigation-title h3 {
+  margin: 4px 0 0;
+  font-size: 17px;
+}
+
+.status-badge {
+  height: fit-content;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #edf6eb;
+  color: #4b884e;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+}
+
+.status-badge.completed {
+  background: #e7f4eb;
+  color: #438352;
+}
+
+.status-badge.cancelled {
+  background: #f9eaea;
+  color: #b35454;
+}
+
+.irrigation-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 11px;
+}
+
+.irrigation-details span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #7b857d;
+  font-size: 11px;
+}
+
+.irrigation-details svg {
+  color: #6c9c70;
+}
+
+/* =========================================================
+   RESOURCES
+   ========================================================= */
+
+.resource-modern-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.resource-modern-card {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid #dfe6de;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.resource-modern-icon {
+  width: 43px;
+  height: 43px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resource-modern-icon.purple {
+  background: #eee9f7;
+  color: #7b67a5;
+}
+
+.resource-modern-card span {
+  display: block;
+  color: #818b83;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.resource-modern-card strong {
+  display: block;
+  margin-top: 4px;
+  color: #303d33;
+  font-size: 13px;
+}
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+.quick-action-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 13px;
+}
+
+.quick-action-card {
+  padding: 17px;
+  border: 1px solid #dfe6df;
+  border-radius: 15px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.2s ease;
+}
+
+.quick-action-card:hover {
+  transform: translateY(-2px);
+  border-color: #b8d3b6;
+  box-shadow: 0 8px 22px rgba(40, 63, 42, 0.07);
+}
+
+.quick-action-card > svg {
+  margin-left: auto;
+  color: #a0aaa1;
+  font-size: 11px;
+}
+
+.quick-action-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-action-icon.green {
+  background: #e5f3e2;
+  color: #4c8f4e;
+}
+
+.quick-action-icon.orange {
+  background: #f8ebdc;
+  color: #ad763c;
+}
+
+.quick-action-icon.blue {
+  background: #e4f1f8;
+  color: #4d89a6;
+}
+
+.quick-action-icon.purple {
+  background: #eee9f7;
+  color: #7766a0;
+}
+
+.quick-action-card strong {
+  display: block;
+  color: #303d33;
+  font-size: 13px;
+}
+
+.quick-action-card span {
+  display: block;
+  margin-top: 4px;
+  color: #89918a;
+  font-size: 10px;
+}
+
+/* =========================================================
+   ACTIVITY
+   ========================================================= */
+
+.activity-section {
+  scroll-margin-top: 140px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: #d6dfd4;
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  margin-bottom: 15px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -28px;
+  top: 17px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #e6f3e3;
+  color: #4f9152;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  box-shadow: 0 0 0 4px #f5f7f4;
+}
+
+.timeline-content {
+  flex: 1;
+  padding: 18px;
+  border: 1px solid #dfe6df;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.timeline-header span {
+  color: #8a938b;
+  font-size: 10px;
+}
+
+.timeline-header h3 {
+  margin: 4px 0 0;
+  font-size: 16px;
+}
+
+.timeline-content p {
+  margin: 9px 0 0;
+  color: #707b72;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.timeline-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+.history-section {
+  padding: 27px;
+  border: 1px solid #dfe6df;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.history-icon {
+  color: #839084;
+  font-size: 21px;
+}
+
+.history-empty {
+  padding: 42px 20px;
+  text-align: center;
+  border: 1px dashed #d5ded3;
+  border-radius: 14px;
+  background: #fafcf9;
+}
+
+.history-empty > svg {
+  color: #9baa9a;
+  font-size: 26px;
+}
+
+.history-empty h3 {
+  margin: 12px 0 6px;
+  font-size: 16px;
+}
+
+.history-empty p {
+  margin: 0;
+  color: #879087;
+  font-size: 12px;
+}
+
+/* =========================================================
+   EMPTY STATES
+   ========================================================= */
+
+.empty-state {
+  padding: 55px 20px;
+  border: 1px dashed #d4ddd2;
+  border-radius: 16px;
+  background: #fbfcfa;
+  text-align: center;
+}
+
+.empty-state.small {
+  padding: 35px 20px;
+}
+
+.empty-icon {
+  width: 55px;
+  height: 55px;
+  margin: 0 auto 13px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8f3e5;
+  color: #5a965b;
+  font-size: 22px;
+}
+
+.blue-icon {
+  background: #e5f2f8;
+  color: #548eaa;
+}
+
+.purple-icon {
+  background: #eee9f7;
+  color: #7865a1;
+}
+
+.empty-state h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.empty-state p {
+  max-width: 420px;
+  margin: 0 auto 18px;
+  color: #838c85;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.loading-spinner {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 13px;
+  border: 3px solid #dfe9dc;
+  border-top-color: #4d8c4f;
+  border-radius: 50%;
+  animation: farmSpin 0.8s linear infinite;
+}
+
+@keyframes farmSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   DANGER ZONE
+   ========================================================= */
+
+.danger-zone {
+  margin-top: 50px;
+  padding: 22px;
+  border: 1px solid #ecd5d5;
+  border-radius: 15px;
+  background: #fffafa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.danger-zone > div > span {
+  color: #b65b5b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.danger-zone h3 {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+.danger-zone p {
+  margin: 0;
+  color: #8d8181;
+  font-size: 11px;
+}
+
+/* =========================================================
+   NO FARM
+   ========================================================= */
+
+.no-farm-screen {
+  min-height: 470px;
+  padding: 60px 30px;
+  border: 1px solid #dfe6dd;
+  border-radius: 22px;
+  background: #fff;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-farm-icon {
+  width: 82px;
+  height: 82px;
+  margin-bottom: 20px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e6f3e2;
+  color: #4b904e;
+  font-size: 35px;
+}
+
+.no-farm-screen h2 {
+  margin: 8px 0 10px;
+  font-size: 29px;
+}
+
+.no-farm-screen p {
+  max-width: 520px;
+  margin: 0 auto 24px;
+  color: #7b857d;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1150px) {
+
+  .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .health-grid {
+  .modern-card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .details-grid {
+  .soil-metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .resource-modern-grid,
+  .quick-action-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .farm-selector-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .soil-form-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 700px) {
-  .myfarm-header {
+@media (max-width: 850px) {
+
+  .myfarm-topbar {
     padding: 0 4%;
   }
 
-  .myfarm-container {
-    width: 94%;
-    padding-top: 20px;
+  .myfarm-content {
+    width: 92%;
+    padding-top: 35px;
+  }
+
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .farm-hero {
     align-items: flex-start;
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 
-  .farm-type {
+  .hero-meta {
     width: 100%;
   }
 
-  .farm-stats,
-  .resource-grid,
-  .action-grid,
-  .health-grid,
-  .details-grid,
-  .farm-form {
-    grid-template-columns: 1fr;
+  .hero-meta > div {
+    flex: 1;
+    min-width: 0;
   }
 
-  .crop-card {
+  .soil-summary {
     align-items: flex-start;
-    flex-wrap: wrap;
+    flex-direction: column;
   }
 
-  .crop-main {
-    min-width: calc(100% - 65px);
-  }
-
-  .crop-info {
-    min-width: 45%;
-    border-left: none;
-    padding-left: 0;
-  }
-
-  .growth-stages span {
-    font-size: 6px;
-  }
-
-  .form-actions {
-    grid-column: auto;
+  .soil-summary-value {
+    width: 100%;
+    padding: 15px 0 0;
+    border-left: 0;
+    border-top: 1px solid #e4e9e2;
   }
 }
 
-@media (max-width: 480px) {
-  .myfarm-header h1 {
-    font-size: 16px;
+@media (max-width: 650px) {
+
+  .myfarm-topbar {
+    height: 70px;
   }
 
-  .edit-farm-btn {
-    padding: 8px;
-  }
-
-  .edit-farm-btn span {
+  .brand-subtitle,
+  .farm-status-pill {
     display: none;
   }
 
-  .farm-hero {
-    padding: 16px;
+  .myfarm-content {
+    width: 94%;
+    padding: 28px 0 60px;
   }
 
-  .farm-hero-icon {
-    width: 50px;
-    height: 50px;
-    min-width: 50px;
+  .page-heading h1 {
+    font-size: 32px;
   }
 
-  .farm-hero-info h2 {
-    font-size: 18px;
+  .page-heading p {
+    font-size: 14px;
   }
 
-  .crop-info {
+  .heading-location {
     width: 100%;
-    min-width: 100%;
+    box-sizing: border-box;
   }
 
-  .growth-stages {
-    gap: 4px;
+  .farm-selector,
+  .modern-form-card,
+  .inline-form-card,
+  .soil-section,
+  .history-section {
+    padding: 20px;
   }
 
-  .growth-stages span {
-    text-align: center;
+  .farm-selector-grid,
+  .stats-grid,
+  .modern-card-grid,
+  .resource-modern-grid,
+  .quick-action-grid,
+  .soil-metrics-grid,
+  .soil-form-grid {
+    grid-template-columns: 1fr;
   }
 
-  .history-table {
-    min-width: 600px;
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .input-group.full-width {
+    grid-column: auto;
+  }
+
+  .form-footer {
+    flex-direction: column-reverse;
+  }
+
+  .form-footer button {
+    width: 100%;
+  }
+
+  .farm-hero {
+    padding: 24px;
+  }
+
+  .hero-content {
+    align-items: flex-start;
+  }
+
+  .hero-info h2 {
+    font-size: 25px;
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hero-meta > div {
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .hero-meta strong {
+    font-size: 16px;
+  }
+
+  .farm-navigation {
+    top: 70px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-heading > button {
+    width: 100%;
+  }
+
+  .soil-record {
+    align-items: flex-start;
+  }
+
+  .soil-record-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .soil-record-values {
+    gap: 8px 15px;
+  }
+
+  .irrigation-card {
+    align-items: flex-start;
+  }
+
+  .irrigation-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .record-actions {
+    flex-direction: column;
+  }
+
+  .danger-zone {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .danger-button {
+    width: 100%;
   }
 }
+

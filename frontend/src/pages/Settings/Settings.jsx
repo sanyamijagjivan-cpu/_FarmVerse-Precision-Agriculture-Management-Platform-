@@ -1,5 +1,7 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   FaArrowLeft,
   FaBell,
@@ -7,56 +9,141 @@ import {
   FaLock,
   FaGlobe,
   FaPalette,
-  FaSeedling,
-  FaTint,
   FaSave,
   FaUndo,
   FaEye,
   FaEyeSlash,
   FaUser,
+  FaCloudSun,
+  FaSeedling,
+  FaChartLine,
+  FaBullhorn,
 } from "react-icons/fa";
 
 import "./Settings.css";
 
+const API_URL = "http://localhost:8080/api";
+
 const defaultSettings = {
-  notifications: true,
+  notificationsEnabled: true,
   weatherAlerts: true,
-  marketAlerts: true,
   cropAlerts: true,
+  marketAlerts: true,
+  systemUpdates: true,
   language: "English",
   theme: "Light",
-  mainCrop: "Cotton",
-  farmArea: "2.5",
-  irrigation: "Drip Irrigation",
 };
+
+const languages = [
+  "English",
+  "Tamil",
+  "Hindi",
+  "Malayalam",
+  "Telugu",
+  "Kannada",
+  "Marathi",
+  "Bengali",
+  "Gujarati",
+  "Punjabi",
+];
 
 const Settings = () => {
   const navigate = useNavigate();
 
-  const [settings, setSettings] = React.useState(() => {
-    try {
-      const saved = localStorage.getItem("farmverseSettings");
+  const [settings, setSettings] = React.useState(defaultSettings);
+  const [loading, setLoading] = React.useState(true);
+  const [saving, setSaving] = React.useState(false);
 
-      return saved
-        ? { ...defaultSettings, ...JSON.parse(saved) }
-        : defaultSettings;
-    } catch {
-      return defaultSettings;
-    }
-  });
-
+  const [currentPassword, setCurrentPassword] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] =
+    React.useState(false);
 
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [showPassword, setShowPassword] =
+    React.useState(false);
+
+  const [showConfirmPassword, setShowConfirmPassword] =
+    React.useState(false);
 
   const [message, setMessage] = React.useState("");
+  const [messageType, setMessageType] = React.useState("success");
 
-  /* =====================================================
-     APPLY GLOBAL THEME
-  ===================================================== */
+  // =====================================================
+  // TOKEN
+  // =====================================================
+
+  const getToken = () => {
+    return localStorage.getItem("token");
+  };
+
+  // =====================================================
+  // MESSAGE
+  // =====================================================
+
+  const showMessage = (text, type = "success") => {
+    setMessage(text);
+    setMessageType(type);
+
+    setTimeout(() => {
+      setMessage("");
+    }, 3000);
+  };
+
+  // =====================================================
+  // LOAD SETTINGS
+  // =====================================================
+
+  React.useEffect(() => {
+    const loadSettings = async () => {
+      const token = getToken();
+
+      if (!token) {
+        showMessage("Please login again.", "error");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${API_URL}/users/settings`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Unable to load settings");
+        }
+
+        const data = await response.json();
+
+        setSettings({
+          ...defaultSettings,
+          ...data,
+        });
+      } catch (error) {
+        console.error("Settings loading error:", error);
+
+        showMessage(
+          "Unable to load your settings.",
+          "error"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  // =====================================================
+  // APPLY THEME
+  // =====================================================
 
   React.useEffect(() => {
     const root = document.documentElement;
@@ -67,87 +154,387 @@ const Settings = () => {
       root.classList.remove("dark-theme");
     } else {
       const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)",
+        "(prefers-color-scheme: dark)"
       ).matches;
 
-      root.classList.toggle("dark-theme", prefersDark);
+      root.classList.toggle(
+        "dark-theme",
+        prefersDark
+      );
     }
   }, [settings.theme]);
 
-  /* =====================================================
-     HANDLE CHANGE
-  ===================================================== */
+  // =====================================================
+  // HANDLE SETTING CHANGE
+  // =====================================================
 
   const handleChange = (key, value) => {
-    setSettings((prev) => ({
-      ...prev,
+    setSettings((previous) => ({
+      ...previous,
       [key]: value,
     }));
   };
 
-  /* =====================================================
-     SAVE SETTINGS
-  ===================================================== */
+  // =====================================================
+  // SAVE SETTINGS
+  // =====================================================
 
-  const handleSave = () => {
-    if (password && password.length < 6) {
-      setMessage("Password must contain at least 6 characters.");
+  const saveSettings = async () => {
+    const token = getToken();
+
+    if (!token) {
+      showMessage("Please login again.", "error");
       return;
+    }
+
+    setSaving(true);
+
+    try {
+      const response = await fetch(
+        `${API_URL}/users/settings`,
+        {
+          method: "PUT",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify(settings),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            "Failed to save settings"
+        );
+      }
+
+      setSettings({
+        ...defaultSettings,
+        ...data,
+      });
+
+      showMessage(
+        "Settings saved successfully ✓"
+      );
+    } catch (error) {
+      console.error(
+        "Settings save error:",
+        error
+      );
+
+      showMessage(
+        error.message ||
+          "Unable to save settings.",
+        "error"
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // =====================================================
+  // RESET SETTINGS
+  // =====================================================
+
+  const resetSettings = async () => {
+    const defaultData = {
+      ...defaultSettings,
+    };
+
+    setSettings(defaultData);
+
+    const token = getToken();
+
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_URL}/users/settings`,
+        {
+          method: "PUT",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify(defaultData),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+
+        setSettings({
+          ...defaultSettings,
+          ...data,
+        });
+
+        showMessage(
+          "Settings restored to default."
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Reset settings error:",
+        error
+      );
+
+      showMessage(
+        "Unable to reset settings.",
+        "error"
+      );
+    }
+  };
+
+  // =====================================================
+  // CHANGE PASSWORD
+  // =====================================================
+
+  const changePassword = async () => {
+    if (
+      !currentPassword &&
+      !password &&
+      !confirmPassword
+    ) {
+      return true;
+    }
+
+    if (!currentPassword) {
+      showMessage(
+        "Enter your current password.",
+        "error"
+      );
+
+      return false;
+    }
+
+    if (!password) {
+      showMessage(
+        "Enter your new password.",
+        "error"
+      );
+
+      return false;
+    }
+
+    if (password.length < 6) {
+      showMessage(
+        "New password must contain at least 6 characters.",
+        "error"
+      );
+
+      return false;
     }
 
     if (password !== confirmPassword) {
-      setMessage("Passwords do not match.");
-      return;
+      showMessage(
+        "New passwords do not match.",
+        "error"
+      );
+
+      return false;
     }
 
-    localStorage.setItem("farmverseSettings", JSON.stringify(settings));
+    const token = getToken();
 
-    if (password) {
-      localStorage.setItem("farmversePassword", password);
+    if (!token) {
+      showMessage(
+        "Please login again.",
+        "error"
+      );
 
+      return false;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_URL}/users/change-password`,
+        {
+          method: "PUT",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify({
+            currentPassword,
+            newPassword: password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        showMessage(
+          data.message ||
+            "Password change failed.",
+          "error"
+        );
+
+        return false;
+      }
+
+      setCurrentPassword("");
       setPassword("");
       setConfirmPassword("");
+
+      showMessage(
+        "Password changed successfully ✓"
+      );
+
+      return true;
+    } catch (error) {
+      console.error(
+        "Password error:",
+        error
+      );
+
+      showMessage(
+        "Unable to change password.",
+        "error"
+      );
+
+      return false;
     }
-
-    setMessage("Settings saved successfully ✓");
-
-    setTimeout(() => {
-      setMessage("");
-    }, 3000);
   };
 
-  /* =====================================================
-     RESET
-  ===================================================== */
+  // =====================================================
+  // SAVE EVERYTHING
+  // =====================================================
 
-  const handleReset = () => {
-    setSettings(defaultSettings);
+  const handleSave = async () => {
+    setMessage("");
+    setSaving(true);
 
-    setPassword("");
-    setConfirmPassword("");
+    try {
+      const hasPasswordInput =
+        currentPassword ||
+        password ||
+        confirmPassword;
 
-    localStorage.setItem("farmverseSettings", JSON.stringify(defaultSettings));
+      if (hasPasswordInput) {
+        const passwordChanged =
+          await changePassword();
 
-    document.documentElement.classList.remove("dark-theme");
+        if (!passwordChanged) {
+          return;
+        }
+      }
 
-    setMessage("Settings restored to default.");
+      const token = getToken();
 
-    setTimeout(() => {
-      setMessage("");
-    }, 3000);
+      if (!token) {
+        showMessage(
+          "Please login again.",
+          "error"
+        );
+
+        return;
+      }
+
+      const response = await fetch(
+        `${API_URL}/users/settings`,
+        {
+          method: "PUT",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify(settings),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            "Failed to save settings"
+        );
+      }
+
+      setSettings({
+        ...defaultSettings,
+        ...data,
+      });
+
+      showMessage(
+        "Settings saved successfully ✓"
+      );
+    } catch (error) {
+      console.error(
+        "Save error:",
+        error
+      );
+
+      showMessage(
+        error.message ||
+          "Unable to save settings.",
+        "error"
+      );
+    } finally {
+      setSaving(false);
+    }
   };
+
+  // =====================================================
+  // LOADING
+  // =====================================================
+
+  if (loading) {
+    return (
+      <div className="settings-page">
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "14px",
+          }}
+        >
+          Loading your settings...
+        </div>
+      </div>
+    );
+  }
+
+  // =====================================================
+  // UI
+  // =====================================================
 
   return (
     <div className="settings-page">
-      {/* ================= HEADER ================= */}
+
+      {/* HEADER */}
 
       <header className="settings-header">
+
         <div className="settings-header-left">
-          <button className="back-btn" onClick={() => navigate("/dashboard")}>
+
+          <button
+            className="back-btn"
+            onClick={() =>
+              navigate("/dashboard")
+            }
+          >
             <FaArrowLeft />
           </button>
 
           <div className="settings-brand">
+
             <div className="settings-logo">
               <FaLeaf />
             </div>
@@ -156,33 +543,52 @@ const Settings = () => {
               <strong>FarmVerse</strong>
               <span>Settings</span>
             </div>
+
           </div>
+
         </div>
 
-        <button className="profile-btn" onClick={() => navigate("/profile")}>
+        <button
+          className="profile-btn"
+          onClick={() =>
+            navigate("/profile")
+          }
+        >
           <FaUser />
           <span>Profile</span>
         </button>
+
       </header>
 
-      {/* ================= MAIN ================= */}
-
       <main className="settings-container">
+
+        {/* TITLE */}
+
         <div className="settings-title">
-          <span>ACCOUNT & PREFERENCES</span>
+
+          <span>
+            ACCOUNT & PREFERENCES
+          </span>
 
           <h1>Settings</h1>
 
           <p>
-            Manage your FarmVerse preferences and personalize your farming
-            experience.
+            Manage your FarmVerse preferences
+            and personalize your experience.
           </p>
+
         </div>
 
-        {/* ================= MESSAGE ================= */}
+        {/* MESSAGE */}
 
         {message && (
-          <div className="settings-message">
+          <div
+            className={`settings-message ${
+              messageType === "error"
+                ? "error-message"
+                : ""
+            }`}
+          >
             <FaSave />
             {message}
           </div>
@@ -193,7 +599,9 @@ const Settings = () => {
         ===================================================== */}
 
         <section className="settings-card">
+
           <div className="settings-card-heading">
+
             <div className="settings-heading-icon green">
               <FaBell />
             </div>
@@ -201,221 +609,309 @@ const Settings = () => {
             <div>
               <h2>Notifications</h2>
 
-              <p>Control the alerts you receive from FarmVerse.</p>
+              <p>
+                Choose the FarmVerse alerts you
+                want to receive.
+              </p>
             </div>
+
           </div>
 
           <div className="settings-options">
-            {/* MASTER */}
+
+            {/* ALL NOTIFICATIONS */}
 
             <div className="setting-row">
-              <div className="setting-info">
-                <strong>Notifications</strong>
 
-                <span>Receive FarmVerse alerts and updates.</span>
+              <div className="setting-info">
+
+                <strong>
+                  All Notifications
+                </strong>
+
+                <span>
+                  Enable or disable all FarmVerse
+                  notifications.
+                </span>
+
               </div>
 
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={settings.notifications}
-                  onChange={(e) =>
-                    handleChange("notifications", e.target.checked)
-                  }
-                />
+              <div className="setting-control">
 
-                <span className="slider"></span>
-              </label>
+                <FaBell />
+
+                <label className="switch">
+
+                  <input
+                    type="checkbox"
+                    checked={
+                      settings.notificationsEnabled
+                    }
+                    onChange={(e) =>
+                      handleChange(
+                        "notificationsEnabled",
+                        e.target.checked
+                      )
+                    }
+                  />
+
+                  <span className="slider" />
+
+                </label>
+
+              </div>
+
             </div>
 
             {/* WEATHER */}
 
             <div
               className={`setting-row ${
-                !settings.notifications ? "disabled-row" : ""
+                !settings.notificationsEnabled
+                  ? "disabled-row"
+                  : ""
               }`}
             >
-              <div className="setting-info">
-                <strong>Weather Alerts</strong>
 
-                <span>Get alerts about rain and weather changes.</span>
+              <div className="setting-info">
+
+                <strong>
+                  Weather Alerts
+                </strong>
+
+                <span>
+                  Rain, temperature and severe
+                  weather alerts.
+                </span>
+
               </div>
 
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={settings.weatherAlerts}
-                  disabled={!settings.notifications}
-                  onChange={(e) =>
-                    handleChange("weatherAlerts", e.target.checked)
-                  }
-                />
+              <div className="setting-control">
 
-                <span className="slider"></span>
-              </label>
+                <FaCloudSun />
+
+                <label className="switch">
+
+                  <input
+                    type="checkbox"
+                    checked={
+                      settings.weatherAlerts
+                    }
+                    disabled={
+                      !settings.notificationsEnabled
+                    }
+                    onChange={(e) =>
+                      handleChange(
+                        "weatherAlerts",
+                        e.target.checked
+                      )
+                    }
+                  />
+
+                  <span className="slider" />
+
+                </label>
+
+              </div>
+
+            </div>
+
+            {/* CROP */}
+
+            <div
+              className={`setting-row ${
+                !settings.notificationsEnabled
+                  ? "disabled-row"
+                  : ""
+              }`}
+            >
+
+              <div className="setting-info">
+
+                <strong>
+                  Crop Health Alerts
+                </strong>
+
+                <span>
+                  Important crop health,
+                  disease and pest alerts.
+                </span>
+
+              </div>
+
+              <div className="setting-control">
+
+                <FaSeedling />
+
+                <label className="switch">
+
+                  <input
+                    type="checkbox"
+                    checked={
+                      settings.cropAlerts
+                    }
+                    disabled={
+                      !settings.notificationsEnabled
+                    }
+                    onChange={(e) =>
+                      handleChange(
+                        "cropAlerts",
+                        e.target.checked
+                      )
+                    }
+                  />
+
+                  <span className="slider" />
+
+                </label>
+
+              </div>
+
             </div>
 
             {/* MARKET */}
 
             <div
               className={`setting-row ${
-                !settings.notifications ? "disabled-row" : ""
+                !settings.notificationsEnabled
+                  ? "disabled-row"
+                  : ""
               }`}
             >
-              <div className="setting-info">
-                <strong>Market Alerts</strong>
 
-                <span>Receive crop price updates.</span>
+              <div className="setting-info">
+
+                <strong>
+                  Market Price Alerts
+                </strong>
+
+                <span>
+                  Important crop price and
+                  market updates.
+                </span>
+
               </div>
 
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={settings.marketAlerts}
-                  disabled={!settings.notifications}
-                  onChange={(e) =>
-                    handleChange("marketAlerts", e.target.checked)
-                  }
-                />
+              <div className="setting-control">
 
-                <span className="slider"></span>
-              </label>
+                <FaChartLine />
+
+                <label className="switch">
+
+                  <input
+                    type="checkbox"
+                    checked={
+                      settings.marketAlerts
+                    }
+                    disabled={
+                      !settings.notificationsEnabled
+                    }
+                    onChange={(e) =>
+                      handleChange(
+                        "marketAlerts",
+                        e.target.checked
+                      )
+                    }
+                  />
+
+                  <span className="slider" />
+
+                </label>
+
+              </div>
+
             </div>
 
-            {/* CROP */}
+            {/* SYSTEM */}
 
             <div
               className={`setting-row ${
-                !settings.notifications ? "disabled-row" : ""
+                !settings.notificationsEnabled
+                  ? "disabled-row"
+                  : ""
               }`}
             >
+
               <div className="setting-info">
-                <strong>Crop Health Alerts</strong>
 
-                <span>Get notifications about crop health.</span>
+                <strong>
+                  System Updates
+                </strong>
+
+                <span>
+                  FarmVerse announcements,
+                  features and important updates.
+                </span>
+
               </div>
 
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={settings.cropAlerts}
-                  disabled={!settings.notifications}
-                  onChange={(e) => handleChange("cropAlerts", e.target.checked)}
-                />
+              <div className="setting-control">
 
-                <span className="slider"></span>
-              </label>
+                <FaBullhorn />
+
+                <label className="switch">
+
+                  <input
+                    type="checkbox"
+                    checked={
+                      settings.systemUpdates
+                    }
+                    disabled={
+                      !settings.notificationsEnabled
+                    }
+                    onChange={(e) =>
+                      handleChange(
+                        "systemUpdates",
+                        e.target.checked
+                      )
+                    }
+                  />
+
+                  <span className="slider" />
+
+                </label>
+
+              </div>
+
             </div>
+
           </div>
+
         </section>
 
         {/* =====================================================
-            FARM PREFERENCES
+            LANGUAGE + APPEARANCE
         ===================================================== */}
 
         <section className="settings-card">
+
           <div className="settings-card-heading">
-            <div className="settings-heading-icon green">
-              <FaSeedling />
-            </div>
 
-            <div>
-              <h2>Farm Preferences</h2>
-
-              <p>Update your farm information.</p>
-            </div>
-          </div>
-
-          <div className="form-grid">
-            {/* CROP */}
-
-            <div className="form-group">
-              <label>
-                <FaLeaf />
-                Main Crop
-              </label>
-
-              <select
-                value={settings.mainCrop}
-                onChange={(e) => handleChange("mainCrop", e.target.value)}
-              >
-                <option value="Cotton">Cotton</option>
-                <option value="Wheat">Wheat</option>
-                <option value="Rice">Rice</option>
-                <option value="Sugarcane">Sugarcane</option>
-                <option value="Soybean">Soybean</option>
-                <option value="Maize">Maize</option>
-              </select>
-            </div>
-
-            {/* AREA */}
-
-            <div className="form-group">
-              <label>
-                <FaSeedling />
-                Farm Area
-              </label>
-
-              <div className="input-with-unit">
-                <input
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  value={settings.farmArea}
-                  onChange={(e) => handleChange("farmArea", e.target.value)}
-                />
-
-                <span>Acres</span>
-              </div>
-            </div>
-
-            {/* IRRIGATION */}
-
-            <div className="form-group">
-              <label>
-                <FaTint />
-                Irrigation Method
-              </label>
-
-              <select
-                value={settings.irrigation}
-                onChange={(e) => handleChange("irrigation", e.target.value)}
-              >
-                <option value="Drip Irrigation">Drip Irrigation</option>
-
-                <option value="Sprinkler Irrigation">
-                  Sprinkler Irrigation
-                </option>
-
-                <option value="Flood Irrigation">Flood Irrigation</option>
-
-                <option value="Rainfed">Rainfed</option>
-              </select>
-            </div>
-          </div>
-        </section>
-
-        {/* =====================================================
-            APPEARANCE
-        ===================================================== */}
-
-        <section className="settings-card">
-          <div className="settings-card-heading">
             <div className="settings-heading-icon purple">
               <FaPalette />
             </div>
 
             <div>
-              <h2>Appearance & Language</h2>
 
-              <p>Customize how FarmVerse looks.</p>
+              <h2>
+                Appearance & Language
+              </h2>
+
+              <p>
+                Customize the look and language
+                of FarmVerse.
+              </p>
+
             </div>
+
           </div>
 
           <div className="form-grid">
+
             {/* LANGUAGE */}
 
             <div className="form-group">
+
               <label>
                 <FaGlobe />
                 Language
@@ -423,19 +919,33 @@ const Settings = () => {
 
               <select
                 value={settings.language}
-                onChange={(e) => handleChange("language", e.target.value)}
+                onChange={(e) =>
+                  handleChange(
+                    "language",
+                    e.target.value
+                  )
+                }
               >
-                <option value="English">English</option>
 
-                <option value="Marathi">Marathi</option>
+                {languages.map(
+                  (language) => (
+                    <option
+                      key={language}
+                      value={language}
+                    >
+                      {language}
+                    </option>
+                  )
+                )}
 
-                <option value="Hindi">Hindi</option>
               </select>
+
             </div>
 
             {/* THEME */}
 
             <div className="form-group">
+
               <label>
                 <FaPalette />
                 Appearance
@@ -443,16 +953,32 @@ const Settings = () => {
 
               <select
                 value={settings.theme}
-                onChange={(e) => handleChange("theme", e.target.value)}
+                onChange={(e) =>
+                  handleChange(
+                    "theme",
+                    e.target.value
+                  )
+                }
               >
-                <option value="Light">Light</option>
 
-                <option value="Dark">Dark</option>
+                <option value="Light">
+                  Light
+                </option>
 
-                <option value="System">System Default</option>
+                <option value="Dark">
+                  Dark
+                </option>
+
+                <option value="System">
+                  System Default
+                </option>
+
               </select>
+
             </div>
+
           </div>
+
         </section>
 
         {/* =====================================================
@@ -460,91 +986,206 @@ const Settings = () => {
         ===================================================== */}
 
         <section className="settings-card">
+
           <div className="settings-card-heading">
+
             <div className="settings-heading-icon orange">
               <FaLock />
             </div>
 
             <div>
+
               <h2>Security</h2>
 
-              <p>Update your account password.</p>
+              <p>
+                Change your FarmVerse account
+                password.
+              </p>
+
             </div>
+
           </div>
 
           <div className="password-grid">
-            {/* PASSWORD */}
+
+            {/* CURRENT PASSWORD */}
 
             <div className="form-group">
+
+              <label>
+                <FaLock />
+                Current Password
+              </label>
+
+              <div className="password-input">
+
+                <input
+                  type={
+                    showCurrentPassword
+                      ? "text"
+                      : "password"
+                  }
+                  placeholder="Enter current password"
+                  value={currentPassword}
+                  onChange={(e) =>
+                    setCurrentPassword(
+                      e.target.value
+                    )
+                  }
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowCurrentPassword(
+                      (previous) =>
+                        !previous
+                    )
+                  }
+                >
+                  {showCurrentPassword ? (
+                    <FaEyeSlash />
+                  ) : (
+                    <FaEye />
+                  )}
+                </button>
+
+              </div>
+
+            </div>
+
+            {/* NEW PASSWORD */}
+
+            <div className="form-group">
+
               <label>
                 <FaLock />
                 New Password
               </label>
 
               <div className="password-input">
+
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
                   placeholder="Enter new password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) =>
+                    setPassword(
+                      e.target.value
+                    )
+                  }
                 />
 
                 <button
                   type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() =>
+                    setShowPassword(
+                      (previous) =>
+                        !previous
+                    )
+                  }
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? (
+                    <FaEyeSlash />
+                  ) : (
+                    <FaEye />
+                  )}
                 </button>
+
               </div>
+
             </div>
 
-            {/* CONFIRM */}
+            {/* CONFIRM PASSWORD */}
 
             <div className="form-group">
+
               <label>
                 <FaLock />
                 Confirm Password
               </label>
 
               <div className="password-input">
+
                 <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm password"
+                  type={
+                    showConfirmPassword
+                      ? "text"
+                      : "password"
+                  }
+                  placeholder="Confirm new password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) =>
+                    setConfirmPassword(
+                      e.target.value
+                    )
+                  }
                 />
 
                 <button
                   type="button"
-                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  onClick={() =>
+                    setShowConfirmPassword(
+                      (previous) =>
+                        !previous
+                    )
+                  }
                 >
-                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showConfirmPassword ? (
+                    <FaEyeSlash />
+                  ) : (
+                    <FaEye />
+                  )}
                 </button>
+
               </div>
+
             </div>
+
           </div>
+
         </section>
 
-        {/* =====================================================
-            ACTIONS
-        ===================================================== */}
+        {/* ACTIONS */}
 
         <div className="settings-actions">
-          <button className="reset-settings-btn" onClick={handleReset}>
+
+          <button
+            className="reset-settings-btn"
+            onClick={resetSettings}
+            disabled={saving}
+          >
             <FaUndo />
             Reset
           </button>
 
-          <button className="save-settings-btn" onClick={handleSave}>
+          <button
+            className="save-settings-btn"
+            onClick={handleSave}
+            disabled={saving}
+          >
             <FaSave />
-            Save Changes
+
+            {saving
+              ? "Saving..."
+              : "Save Changes"}
           </button>
+
         </div>
 
+        {/* FOOTER */}
+
         <footer className="settings-footer">
-          © 2026 FarmVerse · Smart Farming Powered by AI
+          © 2026 FarmVerse · Smart Farming
+          Powered by AI
         </footer>
+
       </main>
+
     </div>
   );
 };

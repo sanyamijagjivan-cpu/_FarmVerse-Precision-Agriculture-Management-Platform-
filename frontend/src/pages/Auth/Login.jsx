@@ -28,47 +28,49 @@ const Login = () => {
     });
   };
 
- const handleLogin = async (e) => {
-  e.preventDefault();
+  // LOGIN API
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  if (!formData.email || !formData.password) {
-    alert("Please enter email and password");
-    return;
-  }
+    if (!formData.email || !formData.password) {
+      alert("Please enter email and password");
+      return;
+    }
 
-  try {
-    const response = await fetch(
-      "http://localhost:8080/api/users/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/users/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || "Login failed");
+        return;
       }
-    );
 
-    const data = await response.json();
-
-    if (response.ok) {
       // Save JWT token
       localStorage.setItem("token", data.token);
 
-      alert(data.message);
+      alert(data.message || "Login successful");
 
-      // Go to dashboard
+      // Navigate to dashboard
       navigate("/dashboard");
-    } else {
-      alert(data.message || "Login failed");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Unable to connect to the backend");
     }
-  } catch (error) {
-    console.error(error);
-    alert("Unable to connect to the backend");
-  }
-};
+  };
 
   return (
     <div className="login-page">
@@ -111,7 +113,9 @@ const Login = () => {
 
               <button
                 type="button"
-                onClick={() => alert("Forgot password feature coming soon!")}
+                onClick={() =>
+                  alert("Forgot password feature coming soon!")
+                }
               >
                 Forgot Password?
               </button>
@@ -160,7 +164,9 @@ const Login = () => {
         <div className="signup">
           <span>Don't have an account?</span>
 
-          <button onClick={() => navigate("/signup")}>Create Account</button>
+          <button onClick={() => navigate("/signup")}>
+            Create Account
+          </button>
         </div>
       </div>
     </div>

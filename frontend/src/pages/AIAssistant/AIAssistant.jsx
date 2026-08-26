@@ -6,398 +6,570 @@ import {
   FaRobot,
   FaPaperPlane,
   FaTrash,
-  FaSeedling,
-  FaTint,
-  FaFlask,
-  FaCloudSun,
   FaMicrophone,
-  FaImage,
-  FaLeaf,
+  FaPaperclip,
+  FaCode,
+  FaGraduationCap,
+  FaBriefcase,
+  FaLightbulb,
+  FaPlus,
   FaTimes,
 } from "react-icons/fa";
 
 import "./AIAssistant.css";
 
-const quickQuestions = [
+const quickPrompts = [
   {
-    icon: <FaSeedling />,
-    title: "Crop Recommendation",
-    text: "Which crop should I grow?",
+    icon: <FaCode />,
+    title: "Coding",
+    text: "Help me understand Java programming",
   },
   {
-    icon: <FaLeaf />,
-    title: "Soil Health",
-    text: "How can I improve soil health?",
+    icon: <FaGraduationCap />,
+    title: "Learning",
+    text: "Explain this topic in a simple way",
   },
   {
-    icon: <FaTint />,
-    title: "Irrigation",
-    text: "When should I irrigate my crop?",
+    icon: <FaBriefcase />,
+    title: "Career",
+    text: "Give me some interview preparation tips",
   },
   {
-    icon: <FaFlask />,
-    title: "Fertilizer",
-    text: "Which fertilizer should I use?",
-  },
-];
-
-const recommendations = [
-  {
-    icon: <FaSeedling />,
-    title: "Crop Recommendation",
-    text: "Get crop suggestions based on farm conditions.",
-  },
-  {
-    icon: <FaTint />,
-    title: "Irrigation Advice",
-    text: "Get guidance based on soil moisture and weather.",
-  },
-  {
-    icon: <FaFlask />,
-    title: "Fertilizer Advice",
-    text: "Understand fertilizer requirements for your crop.",
-  },
-  {
-    icon: <FaCloudSun />,
-    title: "Weather Guidance",
-    text: "Use weather conditions to plan farm activities.",
+    icon: <FaLightbulb />,
+    title: "Ideas",
+    text: "Give me some creative project ideas",
   },
 ];
-
-const demoResponses = {
-  "Which crop should I grow?":
-    "I can recommend suitable crops based on your soil type, season, water availability and local climate. Please provide these details for a better recommendation.",
-
-  "How can I improve soil health?":
-    "You can improve soil health by maintaining organic matter, using suitable fertilizers, practicing crop rotation and regularly monitoring soil nutrients and pH.",
-
-  "When should I irrigate my crop?":
-    "Irrigation should depend on soil moisture, crop growth stage and weather conditions. Avoid over-irrigation and monitor soil moisture regularly.",
-
-  "Which fertilizer should I use?":
-    "The correct fertilizer depends on your crop and soil nutrient levels. A soil test can help determine the appropriate NPK requirements.",
-};
 
 const AIAssistant = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const inputRef = useRef(null);
 
   const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: "ai",
-      text: "Hello! I'm your FarmVerse AI Farming Assistant. How can I help you with your farm today?",
-    },
-  ]);
+  // =====================================================
+  // SEND MESSAGE
+  // =====================================================
 
-  const sendMessage = (messageText = input) => {
+  const sendMessage = async (messageText = input) => {
     const text = messageText.trim();
 
     if (!text || isTyping) return;
 
+    const userMessage = {
+      id: `${Date.now()}-user`,
+      sender: "user",
+      text,
+    };
+
     setMessages((previous) => [
       ...previous,
-      {
-        id: Date.now(),
-        sender: "user",
-        text,
-      },
+      userMessage,
     ]);
 
     setInput("");
     setIsTyping(true);
 
-    setTimeout(() => {
-      const response =
-        demoResponses[text] ||
-        "I can help you with crop selection, soil health, irrigation, fertilizers, weather and general farming guidance. Please provide more details about your farm.";
+    try {
+      const token = localStorage.getItem("token");
+
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      const response = await fetch(
+        "http://localhost:8080/api/ai/ask",
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            question: text,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `AI API failed with status ${response.status}`
+        );
+      }
+
+      const aiResponse = await response.text();
 
       setMessages((previous) => [
         ...previous,
         {
-          id: Date.now() + 1,
+          id: `${Date.now()}-ai`,
           sender: "ai",
-          text: response,
+          text: aiResponse,
         },
       ]);
+    } catch (error) {
+      console.error("AI Assistant error:", error);
 
+      setMessages((previous) => [
+        ...previous,
+        {
+          id: `${Date.now()}-error`,
+          sender: "ai",
+          text:
+            "Sorry, I couldn't connect to the AI service right now. Please try again.",
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
-  const clearChat = () => {
-    setMessages([
-      {
-        id: Date.now(),
-        sender: "ai",
-        text: "Chat cleared. How can I help you with your farm?",
-      },
-    ]);
-    setSelectedImage(null);
-  };
+  // =====================================================
+  // ENTER KEY
+  // =====================================================
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+  const handleKeyDown = (event) => {
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
+      event.preventDefault();
       sendMessage();
     }
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files?.[0];
+  // =====================================================
+  // QUICK PROMPT
+  // =====================================================
+
+  const handleQuickPrompt = (text) => {
+    sendMessage(text);
+  };
+
+  // =====================================================
+  // NEW CHAT
+  // =====================================================
+
+  const newChat = () => {
+    setMessages([]);
+    setInput("");
+    setSelectedFile(null);
+  };
+
+  // =====================================================
+  // CLEAR CHAT
+  // =====================================================
+
+  const clearChat = () => {
+    setMessages([]);
+    setInput("");
+    setSelectedFile(null);
+  };
+
+  // =====================================================
+  // FILE
+  // =====================================================
+
+  const handleFile = (event) => {
+    const file = event.target.files?.[0];
 
     if (!file) return;
 
-    const imageUrl = URL.createObjectURL(file);
-
-    setSelectedImage({
-      name: file.name,
-      url: imageUrl,
-    });
+    setSelectedFile(file);
   };
 
-  const removeImage = () => {
-    setSelectedImage(null);
+  const removeFile = () => {
+    setSelectedFile(null);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
+  // =====================================================
+  // VOICE
+  // =====================================================
+
+  const handleVoice = () => {
+    setInput("Can you help me with ");
+    inputRef.current?.focus();
+  };
+
+  // =====================================================
+  // RENDER
+  // =====================================================
+
   return (
-    <div className="ai-page">
-      {/* HEADER */}
-      <header className="ai-header">
-        <div className="ai-header-left">
-          <button
-            className="ai-back-btn"
-            onClick={() => navigate("/dashboard")}
-          >
-            <FaArrowLeft />
-          </button>
+    <div className="normal-ai-page">
 
-          <div className="ai-brand-icon">
-            <FaRobot />
-          </div>
+      {/* =================================================
+          SIDEBAR
+      ================================================= */}
 
-          <div className="ai-title">
-            <strong>AI Farming Assistant</strong>
+      <aside className="normal-ai-sidebar">
 
-            <span>
-              <i></i>
-              FarmVerse AI
-            </span>
-          </div>
-        </div>
+        <div className="sidebar-brand">
 
-        <button className="ai-clear-btn" onClick={clearChat}>
-          <FaTrash />
-          <span>Clear Chat</span>
-        </button>
-      </header>
-
-      <main className="ai-container">
-        {/* INTRO */}
-        <section className="ai-intro">
-          <div className="ai-intro-icon">
+          <div className="sidebar-brand-icon">
             <FaRobot />
           </div>
 
           <div>
-            <span>FARMVERSE AI</span>
+            <strong>FarmVerse AI</strong>
+            <span>Personal Assistant</span>
+          </div>
 
-            <h1>Your Smart Farming Assistant</h1>
+        </div>
+
+        <button
+          className="new-chat-btn"
+          onClick={newChat}
+        >
+          <FaPlus />
+          <span>New chat</span>
+        </button>
+
+        <div className="sidebar-label">
+          AI Assistant
+        </div>
+
+        <div className="sidebar-info">
+
+          <div className="sidebar-info-icon">
+            <FaLightbulb />
+          </div>
+
+          <div>
+            <strong>Ask anything</strong>
 
             <p>
-              Get intelligent guidance for crops, soil, irrigation, fertilizers
-              and farm management.
+              Get help with learning,
+              coding, career and everyday
+              questions.
             </p>
           </div>
-        </section>
 
-        {/* QUICK QUESTIONS */}
-        <section className="ai-section">
-          <div className="section-heading">
-            <div>
-              <h2>Quick Questions</h2>
-              <p>Start with a common farming question</p>
+        </div>
+
+        <div className="sidebar-bottom">
+
+          <div className="sidebar-status">
+            <span></span>
+            AI is online
+          </div>
+
+          <button
+            className="sidebar-dashboard-btn"
+            onClick={() =>
+              navigate("/dashboard")
+            }
+          >
+            <FaArrowLeft />
+            Back to FarmVerse
+          </button>
+
+        </div>
+
+      </aside>
+
+      {/* =================================================
+          MAIN
+      ================================================= */}
+
+      <main className="normal-ai-main">
+
+        {/* =================================================
+            HEADER
+        ================================================= */}
+
+        <header className="normal-ai-header">
+
+          <div className="header-left">
+
+            <button
+              className="header-back-btn"
+              onClick={() =>
+                navigate("/dashboard")
+              }
+            >
+              <FaArrowLeft />
+            </button>
+
+            <div className="header-ai-icon">
+              <FaRobot />
             </div>
+
+            <div className="header-text">
+
+              <strong>
+                AI Assistant
+              </strong>
+
+              <span>
+                <i></i>
+                Online
+              </span>
+
+            </div>
+
           </div>
 
-          <div className="quick-grid">
-            {quickQuestions.map((item) => (
-              <button
-                key={item.text}
-                className="quick-card"
-                onClick={() => sendMessage(item.text)}
-              >
-                <span className="quick-icon">{item.icon}</span>
+          <button
+            className="header-clear-btn"
+            onClick={clearChat}
+          >
+            <FaTrash />
+            <span>Clear</span>
+          </button>
 
-                <span className="quick-content">
-                  <strong>{item.title}</strong>
-                  <small>{item.text}</small>
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
+        </header>
 
-        {/* CHAT */}
-        <section className="ai-chat-card">
-          <div className="chat-header">
-            <div className="chat-header-info">
-              <div className="chat-avatar">
+        {/* =================================================
+            CHAT AREA
+        ================================================= */}
+
+        <div className="normal-ai-chat">
+
+          {messages.length === 0 ? (
+
+            /* =================================================
+                WELCOME
+            ================================================= */
+
+            <section className="normal-ai-welcome">
+
+              <div className="welcome-ai-icon">
+                <div className="welcome-glow"></div>
                 <FaRobot />
               </div>
 
-              <div>
-                <strong>FarmVerse AI</strong>
-
-                <span>
-                  <i></i>
-                  Online
-                </span>
+              <div className="welcome-tag">
+                <span></span>
+                FARMVERSE AI
               </div>
-            </div>
 
-            <button className="chat-clear-small" onClick={clearChat}>
-              <FaTrash />
-            </button>
-          </div>
+              <h1>
+                How can I help you
+                <br />
+                <strong>today?</strong>
+              </h1>
 
-          {/* MESSAGES */}
-          <div className="chat-messages">
-            {messages.map((message) => (
-              <div key={message.id} className={`message-row ${message.sender}`}>
-                {message.sender === "ai" && (
-                  <div className="message-avatar">
+              <p>
+                I'm your friendly AI assistant.
+                Ask me anything about learning,
+                coding, career, ideas, or everyday
+                questions.
+              </p>
+
+              {/* QUICK CARDS */}
+
+              <div className="quick-prompts">
+
+                {quickPrompts.map((item) => (
+
+                  <button
+                    key={item.title}
+                    className="modern-prompt-card"
+                    onClick={() =>
+                      handleQuickPrompt(item.text)
+                    }
+                  >
+
+                    <div className="prompt-icon">
+                      {item.icon}
+                    </div>
+
+                    <div className="prompt-text">
+                      <strong>
+                        {item.title}
+                      </strong>
+
+                      <span>
+                        {item.text}
+                      </span>
+                    </div>
+
+                    <div className="prompt-arrow">
+                      ↗
+                    </div>
+
+                  </button>
+
+                ))}
+
+              </div>
+
+            </section>
+
+          ) : (
+
+            /* =================================================
+                MESSAGES
+            ================================================= */
+
+            <section className="normal-ai-messages">
+
+              {messages.map((msg) => (
+
+                <div
+                  key={msg.id}
+                  className={`normal-message ${msg.sender}`}
+                >
+
+                  {msg.sender === "ai" && (
+
+                    <div className="normal-message-avatar">
+                      <FaRobot />
+                    </div>
+
+                  )}
+
+                  <div className="normal-message-content">
+
+                    <span className="normal-message-name">
+
+                      {msg.sender === "ai"
+                        ? "FarmVerse AI"
+                        : "You"}
+
+                    </span>
+
+                    <div className="normal-message-bubble">
+                      {msg.text}
+                    </div>
+
+                  </div>
+
+                </div>
+
+              ))}
+
+              {isTyping && (
+
+                <div className="normal-message ai">
+
+                  <div className="normal-message-avatar">
                     <FaRobot />
                   </div>
-                )}
 
-                <div className="message-bubble">{message.text}</div>
-              </div>
-            ))}
+                  <div className="normal-message-content">
 
-            {/* TYPING */}
-            {isTyping && (
-              <div className="message-row ai">
-                <div className="message-avatar">
-                  <FaRobot />
+                    <span className="normal-message-name">
+                      FarmVerse AI
+                    </span>
+
+                    <div className="ai-typing">
+
+                      <span></span>
+                      <span></span>
+                      <span></span>
+
+                    </div>
+
+                  </div>
+
                 </div>
 
-                <div className="typing-bubble">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            )}
-          </div>
+              )}
 
-          {/* IMAGE PREVIEW */}
-          {selectedImage && (
-            <div className="image-preview">
-              <img src={selectedImage.url} alt="Selected crop" />
+            </section>
 
-              <div className="image-info">
-                <strong>{selectedImage.name}</strong>
-                <span>Ready for AI analysis</span>
-              </div>
-
-              <button onClick={removeImage}>
-                <FaTimes />
-              </button>
-            </div>
           )}
 
-          {/* INPUT */}
-          <div className="chat-input-area">
+        </div>
+
+        {/* =================================================
+            COMPOSER
+        ================================================= */}
+
+        <footer className="normal-ai-composer">
+
+          {selectedFile && (
+
+            <div className="attached-file">
+
+              <div>
+                <FaPaperclip />
+                <span>
+                  {selectedFile.name}
+                </span>
+              </div>
+
+              <button onClick={removeFile}>
+                <FaTimes />
+              </button>
+
+            </div>
+
+          )}
+
+          <div className="composer-box">
+
             <button
-              className="input-tool"
-              title="Upload crop image"
-              onClick={() => fileInputRef.current?.click()}
+              className="composer-tool"
+              onClick={() =>
+                fileInputRef.current?.click()
+              }
+              title="Attach file"
             >
-              <FaImage />
+              <FaPaperclip />
             </button>
 
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
               hidden
-              onChange={handleImageUpload}
+              onChange={handleFile}
+            />
+
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) =>
+                setInput(e.target.value)
+              }
+              onKeyDown={handleKeyDown}
+              placeholder="Message FarmVerse AI..."
+              rows="1"
+              disabled={isTyping}
             />
 
             <button
-              className="input-tool"
+              className="composer-tool microphone"
+              onClick={handleVoice}
+              disabled={isTyping}
               title="Voice input"
-              onClick={() => setInput("Please describe my farm conditions.")}
             >
               <FaMicrophone />
             </button>
 
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask something about farming..."
-              rows="1"
-            />
-
             <button
-              className="send-btn"
+              className="modern-send-btn"
               onClick={() => sendMessage()}
-              disabled={!input.trim() || isTyping}
+              disabled={
+                !input.trim() ||
+                isTyping
+              }
             >
               <FaPaperPlane />
             </button>
+
           </div>
 
-          <p className="ai-disclaimer">
-            FarmVerse AI provides farming guidance. Verify important decisions
-            with local agricultural experts.
+          <p className="composer-note">
+            FarmVerse AI can make mistakes.
+            Check important information when needed.
           </p>
-        </section>
 
-        {/* AI RECOMMENDATIONS */}
-        <section className="ai-section">
-          <div className="section-heading">
-            <div>
-              <h2>AI Farming Tools</h2>
-              <p>Explore smart recommendations for your farm</p>
-            </div>
-          </div>
+        </footer>
 
-          <div className="recommendation-grid">
-            {recommendations.map((item) => (
-              <div className="recommendation-card" key={item.title}>
-                <div className="recommendation-icon">{item.icon}</div>
-
-                <div>
-                  <strong>{item.title}</strong>
-
-                  <p>{item.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* DISCLAIMER */}
-        <div className="ai-bottom-note">
-          <FaLeaf />
-
-          <span>
-            AI recommendations are for guidance and should be verified with
-            reliable agricultural information.
-          </span>
-        </div>
       </main>
+
     </div>
   );
 };
