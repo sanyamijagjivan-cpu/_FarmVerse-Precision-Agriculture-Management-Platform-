@@ -1,6 +1,10 @@
 package com.farmverse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "farms")
@@ -22,6 +26,16 @@ public class Farm {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    // One farm can have many crops
+    // When farm is deleted, its crops are deleted automatically
+    @OneToMany(
+    mappedBy = "farm",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+)
+@JsonIgnore
+private List<Crop> crops = new ArrayList<>();
 
     public Farm() {
     }
@@ -68,5 +82,13 @@ public class Farm {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Crop> getCrops() {
+        return crops;
+    }
+
+    public void setCrops(List<Crop> crops) {
+        this.crops = crops;
     }
 }

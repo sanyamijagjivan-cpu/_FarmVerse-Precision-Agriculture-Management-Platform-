@@ -1,3 +1,4 @@
+
 package com.farmverse.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +9,15 @@ import org.springframework.stereotype.Service;
 
 import com.farmverse.dto.LoginRequest;
 import com.farmverse.dto.LoginResponse;
+import com.farmverse.dto.UpdateProfileRequest;
+import com.farmverse.dto.UserProfileResponse;
 import com.farmverse.dto.UserRequest;
 import com.farmverse.entity.User;
 import com.farmverse.repository.UserRepository;
 import com.farmverse.response.ApiResponse;
 import com.farmverse.security.JwtUtil;
 
-import com.farmverse.dto.UserProfileResponse;
-import com.farmverse.dto.UpdateProfileRequest;
+import com.farmverse.dto.ChangePasswordRequest;
 
 @Service
 public class UserService {
@@ -31,6 +33,10 @@ public class UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    // ==============================
+    // REGISTER
+    // ==============================
 
     public ApiResponse registerUser(UserRequest userRequest) {
 
@@ -53,6 +59,10 @@ public class UserService {
         return new ApiResponse("User registered successfully");
     }
 
+    // ==============================
+    // LOGIN
+    // ==============================
+
     public LoginResponse loginUser(LoginRequest loginRequest) {
 
         authenticationManager.authenticate(
@@ -70,8 +80,11 @@ public class UserService {
         );
     }
 
+    // ==============================
+// GET PROFILE
+// ==============================
 
-    public UserProfileResponse getProfile(String email) {
+public UserProfileResponse getProfile(String email) {
 
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("User not found"));
@@ -79,11 +92,23 @@ public class UserService {
     return new UserProfileResponse(
             user.getId(),
             user.getName(),
-            user.getEmail()
+            user.getEmail(),
+            user.getPhone(),
+            user.getState(),
+            user.getDistrict(),
+            user.getVillage(),
+            user.getFarmerType(),
+            user.getFarmingExperience(),
+            user.getPreferredLanguage()
     );
 }
 
-     public UserProfileResponse updateProfile(
+
+// ==============================
+// UPDATE PROFILE
+// ==============================
+
+public UserProfileResponse updateProfile(
         String email,
         UpdateProfileRequest request) {
 
@@ -91,13 +116,55 @@ public class UserService {
             .orElseThrow(() -> new RuntimeException("User not found"));
 
     user.setName(request.getName());
+    user.setPhone(request.getPhone());
+    user.setState(request.getState());
+    user.setDistrict(request.getDistrict());
+    user.setVillage(request.getVillage());
+    user.setFarmerType(request.getFarmerType());
+    user.setFarmingExperience(request.getFarmingExperience());
+    user.setPreferredLanguage(request.getPreferredLanguage());
 
     User updatedUser = userRepository.save(user);
 
     return new UserProfileResponse(
             updatedUser.getId(),
             updatedUser.getName(),
-            updatedUser.getEmail()
+            updatedUser.getEmail(),
+            updatedUser.getPhone(),
+            updatedUser.getState(),
+            updatedUser.getDistrict(),
+            updatedUser.getVillage(),
+            updatedUser.getFarmerType(),
+            updatedUser.getFarmingExperience(),
+            updatedUser.getPreferredLanguage()
     );
 }
+
+
+public ApiResponse changePassword(
+        String email,
+        ChangePasswordRequest request) {
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    // Check current password
+    if (!passwordEncoder.matches(
+            request.getCurrentPassword(),
+            user.getPassword())) {
+
+        throw new RuntimeException("Current password is incorrect");
+    }
+
+    // Encrypt and save new password
+    user.setPassword(
+            passwordEncoder.encode(request.getNewPassword())
+    );
+
+    userRepository.save(user);
+
+    return new ApiResponse("Password changed successfully");
+}
+
+
 }

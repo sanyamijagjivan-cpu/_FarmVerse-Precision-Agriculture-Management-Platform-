@@ -40,6 +40,14 @@ public class MarketPriceService {
                         ));
     }
 
+    // READ BY MARKET NAME
+    public List<MarketPrice> getMarketPricesByLocation(
+            String location) {
+
+        return marketPriceRepository
+                .findByMarketNameIgnoreCase(location);
+    }
+
     // UPDATE
     public MarketPrice updateMarketPrice(
             Long id,

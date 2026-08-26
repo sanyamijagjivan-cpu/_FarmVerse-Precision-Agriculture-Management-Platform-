@@ -1,37 +1,45 @@
+package com.farmverse.entity;
 
-package com.farmverse.dto;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-import java.util.List;
+@Entity
+@Table(name = "disease_scans")
+public class DiseaseScan {
 
-public class DiseaseDetectionResponse {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String cropName;
-    private String disease;
-    private int confidence;
-    private String severity;
-    private List<String> observations;
-    private String recommendation;
-    private String prevention;
 
-    public DiseaseDetectionResponse() {
+    private String disease;
+
+    private int confidence;
+
+    @Column(length = 1000)
+    private String recommendation;
+
+    private LocalDateTime scannedAt;
+
+    public DiseaseScan() {
     }
 
-    public DiseaseDetectionResponse(
+    public DiseaseScan(
             String cropName,
             String disease,
             int confidence,
-            String severity,
-            List<String> observations,
-            String recommendation,
-            String prevention) {
+            String recommendation) {
 
         this.cropName = cropName;
         this.disease = disease;
         this.confidence = confidence;
-        this.severity = severity;
-        this.observations = observations;
         this.recommendation = recommendation;
-        this.prevention = prevention;
+        this.scannedAt = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getCropName() {
@@ -58,22 +66,6 @@ public class DiseaseDetectionResponse {
         this.confidence = confidence;
     }
 
-    public String getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
-    public List<String> getObservations() {
-        return observations;
-    }
-
-    public void setObservations(List<String> observations) {
-        this.observations = observations;
-    }
-
     public String getRecommendation() {
         return recommendation;
     }
@@ -82,12 +74,11 @@ public class DiseaseDetectionResponse {
         this.recommendation = recommendation;
     }
 
-    public String getPrevention() {
-        return prevention;
+    public LocalDateTime getScannedAt() {
+        return scannedAt;
     }
 
-    public void setPrevention(String prevention) {
-        this.prevention = prevention;
+    public void setScannedAt(LocalDateTime scannedAt) {
+        this.scannedAt = scannedAt;
     }
 }
-

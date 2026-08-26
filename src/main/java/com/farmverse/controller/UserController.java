@@ -13,6 +13,8 @@ import com.farmverse.service.UserService;
 
 import jakarta.validation.Valid;
 
+import com.farmverse.dto.ChangePasswordRequest;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -52,4 +54,17 @@ public class UserController {
 
         return userService.updateProfile(email, request);
     }
+
+
+@PutMapping("/change-password")
+public ApiResponse changePassword(
+        @Valid @RequestBody ChangePasswordRequest request,
+        org.springframework.security.core.Authentication authentication) {
+
+    String email = authentication.getName();
+
+    return userService.changePassword(email, request);
+}
+
+
 }

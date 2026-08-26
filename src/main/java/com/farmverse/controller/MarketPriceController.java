@@ -49,6 +49,17 @@ public class MarketPriceController {
         );
     }
 
+
+    @GetMapping("/location")
+    public ResponseEntity<List<MarketPrice>> getMarketPricesByLocation(
+                @RequestParam String location) {
+
+        return ResponseEntity.ok(
+            marketPriceService.getMarketPricesByLocation(location)
+    );
+}
+
+
     // UPDATE
     @PutMapping("/{id}")
     public ResponseEntity<MarketPrice> updateMarketPrice(
