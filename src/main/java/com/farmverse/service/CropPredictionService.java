@@ -69,4 +69,3 @@ public class CropPredictionService {
                 "Crop prediction generated successfully"
         );
     }
-}
