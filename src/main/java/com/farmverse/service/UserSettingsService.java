@@ -124,3 +124,4 @@ public class UserSettingsService {
                 settings.getTheme()
         );
     }
+}
