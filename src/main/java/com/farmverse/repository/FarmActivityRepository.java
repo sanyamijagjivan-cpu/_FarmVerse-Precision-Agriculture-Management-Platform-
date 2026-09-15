@@ -11,4 +11,4 @@ public interface FarmActivityRepository
         extends JpaRepository<FarmActivity, Long> {
 
     List<FarmActivity> findByFarm(Farm farm);
-}
+ }
