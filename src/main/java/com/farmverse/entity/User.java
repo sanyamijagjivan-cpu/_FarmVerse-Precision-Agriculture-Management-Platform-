@@ -216,4 +216,3 @@ public class User {
         this.farms = farms;
     }
 }
-
